@@ -1,77 +1,90 @@
 # King
 
-King, the Turkish trick-taking card game, as a static web app for **king.arda.tr**.
-You play 20 hands against three computer players. The UI is in English, Turkish and
-Japanese, works on phones, and installs as a PWA that plays offline.
+**Play now: [king.arda.tr](https://king.arda.tr)**
 
-## Layout
+King is the Turkish trick-taking card game, played over 20 hands of *cezalar* (penalties)
+and *koz* (trumps). This version puts you at the table against three computer players.
+It runs in any modern browser, on desktop and phone, in English, Türkçe and 日本語.
+
+![King on desktop: a hand of Kız Almaz in progress, with the King cetveli score sheet on the right](docs/desktop-en.jpg)
+
+<p align="center">
+  <img src="docs/phone-tr.jpg" width="300" alt="King on a phone in Turkish, mid-trick">
+  &nbsp;&nbsp;
+  <img src="docs/phone-ja.jpg" width="300" alt="King on a phone in Japanese, choosing the game for a hand">
+</p>
+
+## Features
+
+- **The full game.** 20 hands. Each player picks 3 penalty games and 2 trump games, and
+  each penalty can be picked at most twice. The rules are enforced: follow suit, dump
+  penalty cards when void, no leading hearts or trumps before they are broken, and in koz
+  you must beat the highest card or overtrump.
+- **Three computer players** who pick their games from the hand they hold and play to avoid
+  penalties or to win tricks.
+- **Auto.** The button next to your name plays the rest of the current hand for you,
+  including your pick, then switches itself off.
+- **English, Turkish and Japanese**, switchable at any time. Turkish uses table words
+  (*El Almaz*, *Sıra Murat'ta*). Japanese gives each game a Japanese name with the
+  Turkish one underneath.
+- **The King cetveli.** A paper-style score sheet shows every hand, ticks off each
+  penalty as it is used, and counts the picks each player has left.
+- **Made for phones.** Tap a card to raise it and tap again to play it. The score sheet
+  is a drawer, and menus slide up from the bottom. Short landscape screens get a compact layout.
+- **Installable and offline.** Add it to your home screen and it plays without a
+  connection. A game in progress is saved in your browser.
+
+## The games
+
+| Game | Avoid | Points |
+|---|---|---|
+| El Almaz | any trick | −50 per trick |
+| Kupa Almaz | hearts | −30 per heart |
+| Erkek Almaz | kings and jacks | −60 per card |
+| Kız Almaz | queens | −100 per queen |
+| Rıfkı | the king of hearts | −320 |
+| Son İki | the last two tricks | −180 per trick |
+| Koz | (take tricks, you name trumps) | +50 per trick |
+
+Penalties add up to −5200 over a game and the trump games to +5200, so the four final
+scores always sum to zero. King has many house rules. The ones this table uses are on
+the in-game **Rules** screen.
+
+## Development
+
+There are no dependencies. Node 18 or newer is enough.
+
+```sh
+npm test            # play 300 bot games: legal cards, zero-sum scores, quotas met; check all translations
+npm run build       # write the static site to dist/
+npm run serve       # build, then serve dist/ on http://localhost:8417
+npm run screenshots # retake docs/*.jpg with headless Chrome (needs npm run serve running)
+npm run icons       # re-render the PNG icons and og.png from the SVGs (needs rsvg-convert)
+```
 
 | Path | What it is |
 |---|---|
-| `src/game.html` | The whole game: rules engine, bots, translations, UI. It is a page body, so it can also be published as a Claude artifact unchanged. |
-| `public/` | Files copied into the site as they are: manifest, service worker, icons, `og.png`, `CNAME`, `robots.txt`. |
-| `tools/build.mjs` | Wraps `src/game.html` in a full HTML document (meta tags, manifest, service worker registration) and writes `dist/`. |
-| `tools/selftest.mjs` | Plays 300 full bot games and checks every card is legal, every game sums to zero and every quota is met. Also checks that all three languages have every string. |
-| `tools/icons.sh` | Renders the PNG icons and `og.png` from the SVG sources (needs `rsvg-convert`). |
+| `src/game.html` | The whole game: rules engine, bots, translations and UI in one file. It is a page body, so it can also be published as a Claude artifact unchanged. |
+| `public/` | Copied into the site as is: web manifest, service worker, icons, `og.png`, `CNAME`, `robots.txt`. |
+| `tools/build.mjs` | Wraps `src/game.html` in a full HTML document (meta tags, manifest, service worker) and writes `dist/`. |
+| `tools/selftest.mjs` | The engine and translation checks behind `npm test`. |
+| `tools/screenshots.mjs` | Drives headless Chrome over the DevTools protocol to take the README images. |
 
-```sh
-npm test          # engine and translation checks
-npm run build     # writes dist/
-npm run serve     # build, then serve dist/ on http://localhost:8417
-```
+The rules live between `/*ENGINE-START*/` and `/*ENGINE-END*/` in `src/game.html`, and
+the strings between `/*I18N-START*/` and `/*I18N-END*/`. Run `npm test` after changing
+either one. A language missing a string fails the test.
 
-There are no dependencies to install. Node 18 or newer is enough.
+## Deployment
 
-## Deploying to king.arda.tr
+The site is hosted on GitHub Pages at **https://king.arda.tr**. Every push to `main`
+runs [`.github/workflows/pages.yml`](.github/workflows/pages.yml): the tests, then the
+build, then the deploy. Nothing else is needed.
 
-`dist/` is a plain static site. Every file can be cached, except `index.html` and `sw.js`.
-Serve those two with `Cache-Control: no-cache` so a new deploy reaches players on
-their next visit.
+- DNS: `king.arda.tr` is a CNAME to `c0ze.github.io`.
+- Pages is set to build from GitHub Actions, with custom domain `king.arda.tr` and
+  HTTPS enforced.
+- The service worker serves pages network-first, so players get a new deploy on their
+  next visit and the cached copy when they are offline.
 
-### Option A: GitHub Pages (workflow included)
-
-1. Push this folder to a GitHub repository with `main` as the default branch.
-2. In the repository settings, go to **Pages** and set **Source** to **GitHub Actions**.
-   `.github/workflows/pages.yml` tests, builds and deploys on every push to `main`.
-3. At your DNS provider for `arda.tr`, add a record:
-   `king  CNAME  <github-user>.github.io.`
-4. Back in Pages settings, enter `king.arda.tr` as the custom domain and enable
-   **Enforce HTTPS** once the certificate is issued. `public/CNAME` already holds the domain.
-
-The workflow runs on `ubuntu-latest`, not on the self-hosted runner.
-
-### Option B: Cloudflare Pages, Netlify or any static host
-
-Build command `node tools/build.mjs`, output directory `dist`. Then point
-`king.arda.tr` at the host the way it tells you to.
-
-### Option C: your own server
-
-```sh
-npm run build
-rsync -av --delete dist/ user@server:/var/www/king.arda.tr/
-```
-
-nginx:
-
-```nginx
-server {
-    server_name king.arda.tr;
-    root /var/www/king.arda.tr;
-    location = /index.html { add_header Cache-Control "no-cache"; }
-    location = /sw.js      { add_header Cache-Control "no-cache"; }
-    location /             { try_files $uri $uri/ /index.html; }
-    # listen 443 ssl; plus certificates, e.g. from certbot --nginx -d king.arda.tr
-}
-```
-
-HTTPS is required for installing the app and for offline play, since the service worker
-only registers on `https:`.
-
-## Notes
-
-- Fonts come from Google Fonts and are cached by the service worker after the first visit.
-- Saved games, language, speed and sound live in the player's `localStorage`.
-- The house rules are described on the in-game Rules screen. Change them in the
-  engine section of `src/game.html`, between `/*ENGINE-START*/` and `/*ENGINE-END*/`,
-  then run `npm test`.
+To host it anywhere else, run `npm run build` and upload `dist/`. Serve `index.html` and
+`sw.js` with `Cache-Control: no-cache`. The service worker needs HTTPS.
