@@ -13,6 +13,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:manageSpaceActivity="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity"
         android:supportsRtl="true"
         android:theme="@style/Theme.King">
 
@@ -44,6 +45,14 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https" android:host="king.arda.tr" />
             </intent-filter>
+        </activity>
+
+        <!-- Settings → Apps → King → Manage data opens the site's storage settings in Chrome;
+             LauncherActivity also requires this activity to exist. -->
+        <activity android:name="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity">
+            <meta-data
+                android:name="android.support.customtabs.trusted.MANAGE_SPACE_URL"
+                android:value="https://king.arda.tr/" />
         </activity>
 
         <provider

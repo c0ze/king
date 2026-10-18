@@ -30,8 +30,7 @@ android/build.sh fingerprint
 4. Install from the internal-testing link and check: no address bar, the splash screen, play
    offline after the first launch, the language switch, the Cetvel mode.
 5. Fill in the store listing (below) and the App content forms, then promote to production.
-   If the developer account is a personal account created after November 2023, Play requires
-   a closed test with at least 12 testers for 14 days before production access.
+   Gand is an organization account, so Play's 12-tester closed-test rule doesn't apply.
 
 ## Store listing
 
