@@ -738,7 +738,7 @@ en:{
   handSub:(n,who)=>`Hand ${n} of 20, picked by ${who}.`,
   thPlayer:'Player',thHand:'This hand',thTotal:'Total',thPlace:'Place',
   next:n=>`Deal hand ${n}`,final:'See final scores',
-  winYou:'You win the game',win:n=>`${n} wins the game`,
+  winYou:'You win the game',win:n=>`${n} wins the game`,tie:n=>`${n} share the win`,
   endSub:(sum,zero)=>`All 20 hands played. The four totals add up to ${sum}${zero?', as they always should in King':''}.`,
   again:'Play again',
   confirmTitle:'Start a new game?',confirmSub:n=>`The current game, hand ${n} of 20, will be thrown away.`,keep:'Keep playing',startNew:'Start new game',
@@ -818,7 +818,7 @@ tr:{
   handSub:(n,who)=>`${n}. oyun / 20, seçen: ${who}.`,
   thPlayer:'Oyuncu',thHand:'Bu oyun',thTotal:'Toplam',thPlace:'Sıra',
   next:n=>`${n}. oyunu dağıt`,final:'Sonuçları gör',
-  winYou:'Partiyi sen kazandın',win:n=>`Partiyi ${n} kazandı`,
+  winYou:'Partiyi sen kazandın',win:n=>`Partiyi ${n} kazandı`,tie:n=>`${n} birinciliği paylaştı`,
   endSub:(sum,zero)=>`20 oyunun hepsi oynandı. Dört oyuncunun toplamı ${sum}${zero?', King’de olması gerektiği gibi':''}.`,
   again:'Tekrar oyna',
   confirmTitle:'Yeni parti başlasın mı?',confirmSub:n=>`Şu anki parti (${n}. oyun / 20) silinecek.`,keep:'Oynamaya devam',startNew:'Yeni parti başlat',
@@ -897,7 +897,7 @@ ja:{
   handSub:(n,who)=>`第${n}ディール／20、選んだ人：${who}。`,
   thPlayer:'プレイヤー',thHand:'このディール',thTotal:'合計',thPlace:'順位',
   next:n=>`第${n}ディールを配る`,final:'最終結果を見る',
-  winYou:'あなたの勝ちです',win:n=>`${n}の勝ちです`,
+  winYou:'あなたの勝ちです',win:n=>`${n}の勝ちです`,tie:n=>`${n}が同点で1位です`,
   endSub:(sum,zero)=>`全20ディールが終わりました。4人の合計は${sum}です${zero?'（Kingでは必ず0になります）':''}。`,
   again:'もう一度遊ぶ',
   confirmTitle:'新しいゲームを始めますか？',confirmSub:n=>`現在のゲーム（第${n}ディール／20）は破棄されます。`,keep:'続ける',startNew:'新しく始める',
@@ -965,6 +965,13 @@ const fmt=n=>n>0?'+'+n:n<0?'−'+Math.abs(n):'0';
 const cardTxt=c=>rs(c.r)+SYM[c.s];
 const isRed=s=>s==='H'||s==='D';
 const D=ms=>fast?ms*.45:ms;
+/* standings with competition ranking: equal scores share a place (1, 1, 3, 4) */
+function standings(scores){
+  const order=[0,1,2,3].sort((a,b)=>scores[b]-scores[a]);
+  const place=order.map(p=>1+scores.filter(x=>x>scores[p]).length);
+  return {order,place,winners:order.filter(p=>scores[p]===scores[order[0]])};
+}
+const listJoin=a=>{try{return new Intl.ListFormat(lang,{type:'conjunction'}).format(a)}catch(e){return a.join(', ')}};
 const gameName=(k,trump)=>k==='koz'?T().kozName(SYM[trump]):T().con[k].name;
 const gameShort=(k,trump)=>k==='koz'?T().con.koz.short+' '+SYM[trump]:T().con[k].short;
 const glyph=(k,trump)=>k==='koz'?`<span class="${isRed(trump)?'red':''}">${SYM[trump]}</span>`:GLYPH[k].replace('♥','<span class="red">♥</span>');
@@ -1188,7 +1195,15 @@ function popup(p,text,neg){
 }
 
 /* ---- overlays ---- */
-let ovKind=null,manualOv=null;
+let ovKind=null,manualOv=null,lastFocus=null;
+/* a selector that finds "the same control" again after a re-render */
+function focusKey(el){
+  if(!el||el===document.body)return null;
+  if(el.id)return '#'+CSS.escape(el.id);
+  const parts=['act','p','i','k','s','v','lang','mode'].filter(k=>el.dataset&&el.dataset[k]!=null).map(k=>`[data-${k}="${CSS.escape(el.dataset[k])}"]`);
+  return parts.length?el.tagName.toLowerCase()+parts.join(''):null;
+}
+const focusables=root=>[...root.querySelectorAll('button:not([disabled]),a[href],input,textarea,[tabindex="0"]')].filter(x=>x.offsetParent!==null||x===document.activeElement);
 function renderOverlay(){
   const ov=$('#overlay');
   let kind=null;
@@ -1200,10 +1215,25 @@ function renderOverlay(){
   const sig=mode+':'+kind+':'+S.deal+':'+S.phase+':'+lang+':'+(kind==='menu'?[fast,soundOn]:kind==='scEdit'?JSON.stringify(G.cur):'');
   if(sig===ovKind)return;
   const same=!!ovKind&&ovKind.split(':')[1]===kind&&ovKind.split(':')[0]===mode,keep=same&&ov.querySelector('.panel')?ov.querySelector('.panel').scrollTop:0;
+  const active=document.activeElement,key=active&&ov.contains(active)?focusKey(active):null;
   ovKind=sig;
-  if(!kind){ov.innerHTML='';return}
+  $('#app').inert=!!kind;
+  if(!kind){
+    ov.innerHTML='';
+    if(lastFocus&&lastFocus.isConnected)lastFocus.focus({preventScroll:true});
+    lastFocus=null;return;
+  }
+  if(!same&&!lastFocus&&active&&!ov.contains(active)&&active!==document.body)lastFocus=active;
   ov.innerHTML={choose:chooseHTML,handEnd:handEndHTML,gameEnd:gameEndHTML,rules:rulesHTML,confirmNew:confirmHTML,menu:menuHTML,confirmTable:confirmTableHTML,share:shareHTML,scEdit:scEditHTML}[kind]();
-  if(same){const o=ov.querySelector('.ov'),pn=ov.querySelector('.panel');if(o)o.classList.add('noanim');if(pn)pn.scrollTop=keep}
+  const pn=ov.querySelector('.panel');
+  if(pn){pn.setAttribute('aria-modal','true');pn.tabIndex=-1}
+  if(same){const o=ov.querySelector('.ov');if(o)o.classList.add('noanim');if(pn)pn.scrollTop=keep}
+  if(pn){
+    const back=same&&key?ov.querySelector(key):null;
+    if(back&&!back.disabled)back.focus({preventScroll:true});
+    else if(same&&key)pn.focus({preventScroll:true});
+    else if(!same)(focusables(pn)[0]||pn).focus({preventScroll:true});
+  }
   wireOverlay(kind);
 }
 function openManual(k){clearTimeout(timer);toggleSheet(false);manualOv=k;ovKind=null;renderOverlay()}
@@ -1240,16 +1270,16 @@ function handEndHTML(){
     <div class="actions"><button type="button" class="btn primary" id="nextBtn">${S.deal===19?t.final:t.next(S.deal+2)}</button></div></div></div>`;
 }
 function gameEndHTML(){
-  const t=T(),order=[0,1,2,3].sort((a,b)=>S.scores[b]-S.scores[a]),w=order[0];
+  const t=T(),{order,place,winners}=standings(S.scores);
   const sum=S.scores.reduce((a,b)=>a+b,0);
-  const head=w===0?t.winYou:t.win(nm(w));
+  const head=winners.length>1?t.tie(listJoin(winners.map(nm))):winners[0]===0?t.winYou:t.win(nm(winners[0]));
   const top=Math.max(1,...S.scores.map(Math.abs));
   return `<div class="ov"><div class="panel end" role="dialog" aria-label="${head}">
     ${crownSvg('win-crown')}
     <h2>${head}</h2>
     <p class="sub">${t.endSub(fmt(sum),sum===0)}</p>
     <div class="hres"><span class="h">${t.thPlayer}</span><span></span><span class="h">${t.thTotal}</span><span class="h">${t.thPlace}</span>
-    ${order.map((p,i)=>{const v=S.scores[p];return `<span class="who">${avatar(p)}${nm(p)}</span><span class="barw"><i class="${v<0?'neg':''}" style="width:${(Math.abs(v)/top*100).toFixed(1)}%"></i></span><span class="v ${v<0?'neg':v>0?'pos':''}">${fmt(v)}</span><span class="t">${i+1}</span>`}).join('')}
+    ${order.map((p,i)=>{const v=S.scores[p];return `<span class="who">${avatar(p)}${nm(p)}</span><span class="barw"><i class="${v<0?'neg':''}" style="width:${(Math.abs(v)/top*100).toFixed(1)}%"></i></span><span class="v ${v<0?'neg':v>0?'pos':''}">${fmt(v)}</span><span class="t">${place[i]}</span>`}).join('')}
     </div>
     <div class="actions"><button type="button" class="btn primary" id="againBtn">${t.again}</button></div></div></div>`;
 }
@@ -1279,7 +1309,7 @@ function menuHTML(){
     <div class="row"><span>${t.language}</span><div class="seg" id="menuLang" role="group" aria-label="${t.language}">${langSeg()}</div></div>
     <div class="row"><span>${t.speed}</span><span id="menuSpeed">${seg(t.speed,[['n',t.normal],['f',t.fast]],fast?'f':'n')}</span></div>
     <div class="row"><span>${t.sound}</span><span id="menuSound">${seg(t.sound,[['1',t.on],['0',t.off]],soundOn?'1':'0')}</span></div>
-    <div class="mb"><button type="button" class="btn" id="menuRules">${t.rules}</button><button type="button" class="btn" id="menuNew">${t.newGame}</button></div>
+    <div class="mb"><button type="button" class="btn" id="menuRules">${t.rules}</button>${mode==='score'?(G?`<button type="button" class="btn" id="menuNew">${t.sc.newTable}</button>`:''):`<button type="button" class="btn" id="menuNew">${t.newGame}</button>`}</div>
     ${gandHTML()}
     <div class="actions"><button type="button" class="btn primary" id="closeBtn">${t.close}</button></div></div></div>`;
 }
@@ -1315,7 +1345,7 @@ function wireOverlay(kind){
     $('#menuSpeed').addEventListener('click',e=>{const b=e.target.closest('button');if(b){fast=b.dataset.v==='f';pref('fast',fast?'1':'0');ovKind=null;renderOverlay()}});
     $('#menuSound').addEventListener('click',e=>{const b=e.target.closest('button');if(b){soundOn=b.dataset.v==='1';pref('sound',soundOn?'1':'0');if(soundOn){audio();snd('turn')}ovKind=null;renderOverlay()}});
     $('#menuRules').addEventListener('click',()=>openManual('rules'));
-    $('#menuNew').addEventListener('click',()=>openManual('confirmNew'));
+    const mn=$('#menuNew');if(mn)mn.addEventListener('click',()=>openManual(mode==='score'?'confirmTable':'confirmNew'));
   }
   const nb=$('#nextBtn');if(nb){nb.addEventListener('click',()=>{nextDeal(S);save();render();step()});nb.focus({preventScroll:true})}
   const ab=$('#againBtn');if(ab)ab.addEventListener('click',newGameNow);
@@ -1382,11 +1412,12 @@ function scEditHTML(){
     <div class="actions"><button type="button" class="btn" data-act="cancel">${s.cancel}</button>${G.cur.k?`<button type="button" class="btn primary big" data-act="save" ${ready?'':'disabled'}>${s.save}</button>`:''}</div></div></div>`;
 }
 function doneCard(V){
-  const t=T(),s=t.sc,order=[0,1,2,3].sort((a,b)=>V.scores[b]-V.scores[a]),top=Math.max(1,...V.scores.map(Math.abs));
+  const t=T(),s=t.sc,{order,place,winners}=standings(V.scores),top=Math.max(1,...V.scores.map(Math.abs));
   const sum=V.scores.reduce((a,b)=>a+b,0);
-  return `<div class="sc-card sc-done">${crownSvg('win-crown')}<h2>${esc(t.win(scName(order[0])))}</h2><p class="sub">${s.doneSub(fmt(sum))}</p>
+  const head=winners.length>1?t.tie(listJoin(winners.map(scName))):t.win(scName(winners[0]));
+  return `<div class="sc-card sc-done">${crownSvg('win-crown')}<h2>${esc(head)}</h2><p class="sub">${s.doneSub(fmt(sum))}</p>
     <div class="hres"><span class="h">${t.thPlayer}</span><span></span><span class="h">${t.thTotal}</span><span class="h">${t.thPlace}</span>
-    ${order.map((p,i)=>{const v=V.scores[p];return `<span class="who">${scAv(p)}${esc(scName(p))}</span><span class="barw"><i class="${v<0?'neg':''}" style="width:${(Math.abs(v)/top*100).toFixed(1)}%"></i></span><span class="v ${v<0?'neg':v>0?'pos':''}">${fmt(v)}</span><span class="t">${i+1}</span>`}).join('')}</div></div>`;
+    ${order.map((p,i)=>{const v=V.scores[p];return `<span class="who">${scAv(p)}${esc(scName(p))}</span><span class="barw"><i class="${v<0?'neg':''}" style="width:${(Math.abs(v)/top*100).toFixed(1)}%"></i></span><span class="v ${v<0?'neg':v>0?'pos':''}">${fmt(v)}</span><span class="t">${place[i]}</span>`}).join('')}</div></div>`;
 }
 function paperHTML(V){
   const s=T().sc;
@@ -1400,14 +1431,16 @@ function paperHTML(V){
 function renderScorer(){
   if(mode!=='score')return;
   const el=$('#scorer'),focus=document.activeElement&&document.activeElement.id,top=el.scrollTop;
+  const key=document.activeElement&&el.contains(document.activeElement)&&!(focus&&focus.startsWith('scName'))?focusKey(document.activeElement):null;
   el.innerHTML=`<div class="wrap">${G?paperHTML(tableView(G)):setupHTML()}</div>`;
   el.scrollTop=top;
+  if(key){const b=el.querySelector(key);if(b&&!b.disabled)b.focus({preventScroll:true})}
   if(focus&&focus.startsWith('scName')){const i=$('#'+focus);if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}}
 }
 function resultsText(){
-  const V=tableView(G),order=[0,1,2,3].sort((a,b)=>V.scores[b]-V.scores[a]);
+  const V=tableView(G),{order,place}=standings(V.scores);
   const L=[`King · ${new Date().toLocaleDateString(lang)}`,''];
-  order.forEach((p,i)=>L.push(`${i+1}. ${scName(p)}  ${fmt(V.scores[p])}`));
+  order.forEach((p,i)=>L.push(`${place[i]}. ${scName(p)}  ${fmt(V.scores[p])}`));
   L.push('',[0,1,2,3].map(scName).join(' / '));
   G.hands.forEach((h,i)=>L.push(`${i+1}. ${gameShort(h.k,h.trump)} (${scName(h.chooser)}): ${h.pts.map(fmt).join(' / ')}`));
   L.push('','https://king.arda.tr');
@@ -1530,6 +1563,14 @@ function toggleSheet(on){sheetOpen=on;$('#sheet').classList.toggle('open',on);$(
 $('#scoresBtn').addEventListener('click',()=>toggleSheet(!sheetOpen));
 $('#scrim').addEventListener('click',()=>toggleSheet(false));
 $('#sheet').addEventListener('click',e=>{if(e.target.closest('#sheetClose'))toggleSheet(false)});
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Tab')return;
+  const pn=$('#overlay .panel');if(!pn)return;
+  const f=focusables(pn);if(!f.length){e.preventDefault();pn.focus();return}
+  const first=f[0],last=f[f.length-1],a=document.activeElement;
+  if(e.shiftKey&&(a===first||a===pn||!pn.contains(a))){e.preventDefault();last.focus()}
+  else if(!e.shiftKey&&(a===last||!pn.contains(a))){e.preventDefault();first.focus()}
+});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(sheetOpen)toggleSheet(false);else if(manualOv)closeManual();else if(mode==='score'&&G&&G.cur)scAct('cancel')}});
 window.addEventListener('resize',layoutHand);
 
@@ -1539,7 +1580,11 @@ function boot(data){
   if(!S||!S.hands){S=newGame();startDeal(S)}
   if(S.phase==='deal')startDeal(S);
   G=(data&&data.G&&data.G.v===1)?data.G:loadG();
-  if(G&&G.cur&&!Number.isInteger(G.cur.i))G.cur=null;
+  if(G&&G.cur&&!Number.isInteger(G.cur.i)){
+    // drafts saved before hand editing existed belong to the next hand
+    G.cur=G.cur.k&&G.hands.length<20?{i:G.hands.length,k:G.cur.k,trump:G.cur.trump||null,entry:G.cur.entry||tableEntry(G.cur.k)}:null;
+    saveG();
+  }
   try{if(localStorage.getItem(KEY+'-mode')==='score')mode='score'}catch(e){}
   if(data&&data.mode)mode=data.mode;
   render();step();

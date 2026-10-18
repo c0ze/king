@@ -71,7 +71,8 @@ fs.writeFileSync(path.join(dist, 'index.html'), html);
 
 // Stamp the service worker's cache name with a hash of everything it caches.
 const hash = crypto.createHash('sha256');
-for (const f of ['index.html', 'manifest.webmanifest']) hash.update(fs.readFileSync(path.join(dist, f)));
+const shell = JSON.parse(fs.readFileSync(path.join(dist, 'sw.js'), 'utf8').match(/const SHELL = (\[[^\]]*\])/)[1].replace(/'/g, '"'));
+for (const f of shell.filter(f => f !== './')) hash.update(fs.readFileSync(path.join(dist, f)));
 const build = hash.digest('hex').slice(0, 10);
 const swPath = path.join(dist, 'sw.js');
 fs.writeFileSync(swPath, fs.readFileSync(swPath, 'utf8').replace('__BUILD__', build));

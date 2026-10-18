@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "tr.gand.king",
+      "sha256_cert_fingerprints": [
+        "CB:23:DB:54:86:9A:30:9E:DF:58:C5:A8:AE:FB:C4:4A:2B:BA:B1:61:E2:CE:05:02:22:4A:D1:36:F8:CA:F2:8B"
+      ]
+    }
+  }
+]

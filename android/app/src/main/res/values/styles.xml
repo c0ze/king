@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.King" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:statusBarColor">@color/rail</item>
+        <item name="android:navigationBarColor">@color/rail</item>
+    </style>
+</resources>

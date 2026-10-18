@@ -20,9 +20,17 @@ self.addEventListener('fetch', e => {
   const url = new URL(req.url);
   if (url.origin === location.origin) {
     if (req.mode === 'navigate') {
+      // Only the game page is stored as the offline fallback; other pages (privacy, 404s)
+      // are cached under their own URL, and error responses are never cached.
+      const base = new URL('./', self.registration.scope).pathname;
+      const isGame = url.pathname === base || url.pathname === base + 'index.html';
+      const key = isGame ? 'index.html' : req;
       e.respondWith(fetch(req)
-        .then(res => { const copy = res.clone(); caches.open(CACHE).then(c => c.put('index.html', copy)); return res; })
-        .catch(() => caches.match('index.html')));
+        .then(res => {
+          if (res.ok && res.type === 'basic') { const copy = res.clone(); e.waitUntil(caches.open(CACHE).then(c => c.put(key, copy))); }
+          return res;
+        })
+        .catch(() => caches.match(key).then(hit => hit || (isGame ? Response.error() : caches.match('index.html').then(r => r || Response.error())))));
       return;
     }
     e.respondWith(caches.match(req).then(hit => hit || fetch(req)));
@@ -30,7 +38,7 @@ self.addEventListener('fetch', e => {
   }
   if (url.host === 'fonts.googleapis.com' || url.host === 'fonts.gstatic.com') {
     e.respondWith(caches.open(FONTS).then(c => c.match(req).then(hit => hit || fetch(req).then(res => {
-      if (res.ok || res.type === 'opaque') c.put(req, res.clone());
+      if (res.ok || res.type === 'opaque') e.waitUntil(c.put(req, res.clone()));
       return res;
     }))));
   }
