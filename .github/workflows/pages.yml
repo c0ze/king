@@ -24,9 +24,15 @@ jobs:
           node-version: 22
       - run: node tools/selftest.mjs
       - run: node tools/build.mjs
-      - uses: actions/upload-pages-artifact@v4
+      # upload-pages-artifact drops dot-directories, which would lose .well-known/assetlinks.json
+      # (needed by the Android app), so build the same artifact.tar by hand.
+      - run: tar --dereference --hard-dereference --directory dist -cf "$RUNNER_TEMP/artifact.tar" .
+      - uses: actions/upload-artifact@v4
         with:
-          path: dist
+          name: github-pages
+          path: ${{ runner.temp }}/artifact.tar
+          retention-days: 1
+          if-no-files-found: error
 
   deploy:
     needs: build

@@ -1195,7 +1195,10 @@ function popup(p,text,neg){
 }
 
 /* ---- overlays ---- */
-let ovKind=null,manualOv=null,lastFocus=null;
+let ovKind=null,manualOv=null,lastFocus=null,lastFocusKey=null;
+const modalKind=k=>!!k&&k!=='choose';
+/* re-render the open dialog in place (keeps focus on the control that changed) */
+const refreshOv=()=>{if(ovKind)ovKind=ovKind.split(':').slice(0,2).join(':')+':~';renderOverlay()};
 /* a selector that finds "the same control" again after a re-render */
 function focusKey(el){
   if(!el||el===document.body)return null;
@@ -1217,16 +1220,18 @@ function renderOverlay(){
   const same=!!ovKind&&ovKind.split(':')[1]===kind&&ovKind.split(':')[0]===mode,keep=same&&ov.querySelector('.panel')?ov.querySelector('.panel').scrollTop:0;
   const active=document.activeElement,key=active&&ov.contains(active)?focusKey(active):null;
   ovKind=sig;
-  $('#app').inert=!!kind;
+  $('#app').inert=modalKind(kind);
   if(!kind){
     ov.innerHTML='';
-    if(lastFocus&&lastFocus.isConnected)lastFocus.focus({preventScroll:true});
-    lastFocus=null;return;
+    // the opener may have been re-rendered while the dialog was open: find its replacement
+    const back=lastFocus&&lastFocus.isConnected?lastFocus:lastFocusKey?document.querySelector('#app '+lastFocusKey):null;
+    if(back&&!back.disabled)back.focus({preventScroll:true});
+    lastFocus=null;lastFocusKey=null;return;
   }
-  if(!same&&!lastFocus&&active&&!ov.contains(active)&&active!==document.body)lastFocus=active;
+  if(!same&&!lastFocus&&active&&!ov.contains(active)&&active!==document.body){lastFocus=active;lastFocusKey=focusKey(active)}
   ov.innerHTML={choose:chooseHTML,handEnd:handEndHTML,gameEnd:gameEndHTML,rules:rulesHTML,confirmNew:confirmHTML,menu:menuHTML,confirmTable:confirmTableHTML,share:shareHTML,scEdit:scEditHTML}[kind]();
   const pn=ov.querySelector('.panel');
-  if(pn){pn.setAttribute('aria-modal','true');pn.tabIndex=-1}
+  if(pn){pn.setAttribute('aria-modal',String(modalKind(kind)));pn.tabIndex=-1}
   if(same){const o=ov.querySelector('.ov');if(o)o.classList.add('noanim');if(pn)pn.scrollTop=keep}
   if(pn){
     const back=same&&key?ov.querySelector(key):null;
@@ -1342,8 +1347,8 @@ function wireOverlay(kind){
   }
   if(kind==='menu'){
     $('#menuLang').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setLang(b.dataset.lang)});
-    $('#menuSpeed').addEventListener('click',e=>{const b=e.target.closest('button');if(b){fast=b.dataset.v==='f';pref('fast',fast?'1':'0');ovKind=null;renderOverlay()}});
-    $('#menuSound').addEventListener('click',e=>{const b=e.target.closest('button');if(b){soundOn=b.dataset.v==='1';pref('sound',soundOn?'1':'0');if(soundOn){audio();snd('turn')}ovKind=null;renderOverlay()}});
+    $('#menuSpeed').addEventListener('click',e=>{const b=e.target.closest('button');if(b){fast=b.dataset.v==='f';pref('fast',fast?'1':'0');refreshOv()}});
+    $('#menuSound').addEventListener('click',e=>{const b=e.target.closest('button');if(b){soundOn=b.dataset.v==='1';pref('sound',soundOn?'1':'0');if(soundOn){audio();snd('turn')}refreshOv()}});
     $('#menuRules').addEventListener('click',()=>openManual('rules'));
     const mn=$('#menuNew');if(mn)mn.addEventListener('click',()=>openManual(mode==='score'?'confirmTable':'confirmNew'));
   }
@@ -1542,7 +1547,7 @@ function toggleAuto(){
 function newGameNow(){clearTimeout(timer);S=newGame();startDeal(S);ovKind=null;dealShown=-1;save();render();step()}
 function setLang(l){
   if(!I18N[l]||l===lang)return;
-  lang=l;pref('lang',l);ovKind=null;render();
+  lang=l;pref('lang',l);if(ovKind)ovKind=ovKind.split(':').slice(0,2).join(':')+':~';render();
 }
 
 $('#rulesBtn').addEventListener('click',()=>openManual('rules'));
@@ -1565,7 +1570,7 @@ $('#scrim').addEventListener('click',()=>toggleSheet(false));
 $('#sheet').addEventListener('click',e=>{if(e.target.closest('#sheetClose'))toggleSheet(false)});
 document.addEventListener('keydown',e=>{
   if(e.key!=='Tab')return;
-  const pn=$('#overlay .panel');if(!pn)return;
+  const pn=$('#overlay .panel');if(!pn||pn.getAttribute('aria-modal')!=='true')return;
   const f=focusables(pn);if(!f.length){e.preventDefault();pn.focus();return}
   const first=f[0],last=f[f.length-1],a=document.activeElement;
   if(e.shiftKey&&(a===first||a===pn||!pn.contains(a))){e.preventDefault();last.focus()}

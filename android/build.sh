@@ -29,17 +29,18 @@ case "${1:-bundle}" in
 	keystore)
 		if [[ -f "$KS" ]]; then echo "Upload keystore already exists: $KS"; exit 0; fi
 		mkdir -p "$(dirname "$KS")" && chmod 700 "$(dirname "$KS")"
-		pw=$(openssl rand -base64 30 | tr -d '/+=' | cut -c1-32)
-		security add-generic-password -s king-android-upload -a upload -l "king android upload" -w "$pw" -U
+		export KING_PW; KING_PW=$(openssl rand -base64 30 | tr -d '/+=' | cut -c1-32)
+		# the password goes to the keychain over stdin and to keytool through the environment,
+		# never on a command line where other processes could read it
+		printf 'add-generic-password -U -s king-android-upload -a upload -l "king android upload" -w "%s"\n' "$KING_PW" | security -i >/dev/null
 		keytool -genkeypair -keystore "$KS" -storetype PKCS12 -alias upload -keyalg RSA -keysize 4096 \
-			-validity 12000 -dname "CN=Gand, O=Gand, C=TR" -storepass "$pw" -keypass "$pw" >/dev/null 2>&1
+			-validity 12000 -dname "CN=Gand, O=Gand, C=TR" -storepass:env KING_PW -keypass:env KING_PW >/dev/null 2>&1
 		chmod 600 "$KS"
-		unset pw
+		unset KING_PW
 		echo "Created $KS (alias upload); password stored in the login keychain (king-android-upload)."
 		"$SELF" fingerprint ;;
 	fingerprint)
-		pw=$(password)
-		keytool -list -v -keystore "$KS" -alias upload -storepass "$pw" 2>/dev/null | awk '/SHA256:/{print $2}' ;;
+		KING_PW=$(password) keytool -list -v -keystore "$KS" -alias upload -storepass:env KING_PW 2>/dev/null | awk '/SHA256:/{print $2}' ;;
 	bundle)
 		pw=$(password)
 		version=$(sed -n 's/.*versionName = "\(.*\)".*/\1/p' app/build.gradle.kts)

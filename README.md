@@ -23,11 +23,11 @@ It also keeps score when you play King with real cards.
   you must beat the highest card or overtrump.
 - **Three computer players** who pick their games from the hand they hold and play to avoid
   penalties or to win tricks.
-- **Score mode for real tables.** Playing with real cards? Switch to *Score*, enter the four
-  players, and the app keeps the King cetveli for you. It moves the pick round the table,
-  only offers games the picker may still choose, and checks every hand adds up (13 tricks,
-  13 hearts, 8 kings and jacks, 4 queens) before saving. Undo the last hand at any time,
-  and share the final results as text.
+- **Puan cetveli for real tables.** Playing with real cards? Switch to *Cetvel* (*Sheet*),
+  enter the four players, and the paper score sheet becomes the main screen. The pick moves
+  round the table, the picker only sees games they may still choose, and every hand must add
+  up (13 tricks, 13 hearts, 8 kings and jacks, 4 queens) before it saves. Tap any hand on the
+  sheet to fix it, and share the final results as text.
 - **Auto.** The button next to your name plays the rest of the current hand for you,
   including your pick, then switches itself off.
 - **English, Turkish and Japanese**, switchable at any time. Turkish uses table words
@@ -39,6 +39,8 @@ It also keeps score when you play King with real cards.
   is a drawer, and menus slide up from the bottom. Short landscape screens get a compact layout.
 - **Installable and offline.** Add it to your home screen and it plays without a
   connection. A game in progress is saved in your browser.
+- **No ads, no purchases, no tracking.** The menu has an *Also from Gand* section linking the
+  studio's other games, and that's all.
 
 ## The games
 
@@ -74,7 +76,9 @@ npm run icons       # re-render the PNG icons and og.png from the SVGs (needs rs
 | `public/` | Copied into the site as is: web manifest, service worker, icons, `og.png`, `CNAME`, `robots.txt`. |
 | `tools/build.mjs` | Wraps `src/game.html` in a full HTML document (meta tags, manifest, service worker) and writes `dist/`. |
 | `tools/selftest.mjs` | The engine and translation checks behind `npm test`. |
-| `tools/screenshots.mjs` | Drives headless Chrome over the DevTools protocol to take the README images. |
+| `tools/screenshots.mjs` | Drives headless Chrome over the DevTools protocol to take the README images (`store` for the Play Store set). |
+| `android/` | The Google Play app: a Trusted Web Activity (`tr.gand.king`) that opens king.arda.tr in Chrome. `android/build.sh` builds the signed bundle. |
+| `docs/play-store.md` | Play release steps, store listing texts (TR/EN) and the App content answers. |
 
 The rules live between `/*ENGINE-START*/` and `/*ENGINE-END*/` in `src/game.html`, and
 the strings between `/*I18N-START*/` and `/*I18N-END*/`. Run `npm test` after changing
@@ -92,5 +96,16 @@ build, then the deploy. Nothing else is needed.
 - The service worker serves pages network-first, so players get a new deploy on their
   next visit and the cached copy when they are offline.
 
+### Google Play
+
+The Android app opens the live site, so web deploys update it too. See
+[docs/play-store.md](docs/play-store.md) for the build, the first-release steps
+(including the Play App Signing fingerprint for `assetlinks.json`) and the listing.
+
 To host it anywhere else, run `npm run build` and upload `dist/`. Serve `index.html` and
 `sw.js` with `Cache-Control: no-cache`. The service worker needs HTTPS.
+
+## Licence
+
+Copyright © 2026 Gand. All rights reserved. The source is published for reading only; see
+[LICENSE](LICENSE).
