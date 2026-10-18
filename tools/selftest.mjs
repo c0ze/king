@@ -10,7 +10,7 @@ const src = fs.readFileSync(path.join(root, 'src/game.html'), 'utf8');
 const between = (a, b) => src.split(a)[1].split(b)[0];
 const ctx = vm.createContext({ Math, console });
 vm.runInContext(between('/*ENGINE-START*/', '/*ENGINE-END*/') + between('/*I18N-START*/', '/*I18N-END*/') +
-  ';globalThis.E={newGame,startDeal,botChoose,choose,botCard,applyPlay,resolveTrick,nextDeal,cid,legal,I18N,tableNew,tableView,tableAdd,tableEntry,tableValid,options,NEED,SUITS};', ctx);
+  ';globalThis.E={newGame,startDeal,botChoose,choose,botCard,applyPlay,resolveTrick,nextDeal,cid,legal,I18N,tableNew,tableView,tableAdd,tableSet,tableOptions,tableEntry,tableValid,options,NEED,SUITS};', ctx);
 const E = ctx.E;
 
 const GAMES = Number(process.argv[2] || 300);
@@ -57,6 +57,24 @@ for (let g = 0; g < GAMES; g++) {
   if (G.hands.length !== 20) fail('table hands', G.hands.length);
   if (sum !== 0) fail('table not zero-sum', sum);
   if (E.tableAdd(G, 'koz', 'S', { counts: [13, 0, 0, 0] })) fail('accepted a 21st hand');
+  // Edit random saved hands: every contract tableOptions allows must be accepted and keep the
+  // table consistent; every one it refuses must be rejected.
+  for (let n = 0; n < 5; n++) {
+    const i = rnd(20), opts = E.tableOptions(G, i);
+    for (const o of opts) {
+      const e = E.tableEntry(o.k);
+      if (o.k === 'rifki') e.who = rnd(4); else if (o.k === 'soniki') { e.t12 = rnd(4); e.t13 = rnd(4); }
+      else e.counts[rnd(4)] = E.NEED[o.k];
+      const before = JSON.stringify(G.hands[i]);
+      const ok = E.tableSet(G, i, o.k, 'D', e);
+      if (ok !== o.ok) fail('edit result', o.k, ok, o.ok);
+      if (!ok && JSON.stringify(G.hands[i]) !== before) fail('refused edit changed the hand');
+    }
+    const W = E.tableView(G);
+    if (W.scores.reduce((a, b) => a + b, 0) !== 0) fail('edited table not zero-sum');
+    if (Object.values(W.penUsed).some(v => v !== 2) || W.quota.some(q => q.pen !== 3 || q.koz !== 2)) fail('edit broke quotas');
+  }
+  if (E.tableSet(G, 21, 'koz', 'S', { counts: [13, 0, 0, 0] })) fail('accepted an out-of-range edit');
 }
 
 // Translation keys: every language must define what English defines.

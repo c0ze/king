@@ -165,22 +165,23 @@ button{font:inherit;color:inherit}
 @keyframes dealin{from{opacity:0;transform:translateY(-90px) rotate(0deg)}}
 
 /* score sheet */
-.sheet{min-height:0;overflow:auto;background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:17px 17px;color:var(--pen);border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.45);padding:14px 14px 18px;box-sizing:border-box;font-family:var(--hand);margin-block:9px;position:relative}
-.sheet::before{content:"";position:absolute;left:30px;top:0;bottom:0;width:1px;background:rgba(176,48,47,.35)}
-.sheet h2{font-family:var(--hand);font-weight:700;font-size:1.45rem;margin:0 0 6px;display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
-.sheet h2 small{font-size:.8rem;font-weight:400;color:#5b6f9e}
-.sheet .close{display:none}
-.sheet table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.95rem}
-.sheet th{font-weight:700;font-size:.9rem;padding:2px 3px;border-bottom:2px solid var(--pen);text-align:right;white-space:nowrap}
-.sheet th:nth-child(-n+2),.sheet td:nth-child(-n+2){text-align:left}
-.sheet td{padding:1px 3px;text-align:right;white-space:nowrap;line-height:1.25}
-.sheet td.n{color:#7d8db3;width:1.4em}
-.sheet td.g{font-size:.88rem}
-.sheet td.g .by{color:#7d8db3;font-size:.8rem}
-.sheet td.neg{color:var(--pen-red)}
-.sheet tr.cur td{background:rgba(234,169,61,.22)}
-.sheet tr.tot td{border-top:2px solid var(--pen);font-weight:700;font-size:1.02rem;padding-top:3px}
-.sheet h3{font-family:var(--hand);font-size:1.1rem;margin:16px 0 4px}
+.cetvel{background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:17px 17px;color:var(--pen);border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.45);padding:14px 14px 18px;box-sizing:border-box;font-family:var(--hand);position:relative}
+.sheet{min-height:0;overflow:auto;margin-block:9px}
+.cetvel::before{content:"";position:absolute;left:30px;top:0;bottom:0;width:1px;background:rgba(176,48,47,.35)}
+.cetvel h2{font-family:var(--hand);font-weight:700;font-size:1.45rem;margin:0 0 6px;display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.cetvel h2 small{font-size:.8rem;font-weight:400;color:#5b6f9e}
+.cetvel .close{display:none}
+.cetvel table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.95rem}
+.cetvel th{font-weight:700;font-size:.9rem;padding:2px 3px;border-bottom:2px solid var(--pen);text-align:right;white-space:nowrap}
+.cetvel th:nth-child(-n+2),.cetvel td:nth-child(-n+2){text-align:left}
+.cetvel td{padding:1px 3px;text-align:right;white-space:nowrap;line-height:1.25}
+.cetvel td.n{color:#7d8db3;width:1.4em}
+.cetvel td.g{font-size:.88rem}
+.cetvel td.g .by{color:#7d8db3;font-size:.8rem}
+.cetvel td.neg{color:var(--pen-red)}
+.cetvel tr.cur td{background:rgba(234,169,61,.22)}
+.cetvel tr.tot td{border-top:2px solid var(--pen);font-weight:700;font-size:1.02rem;padding-top:3px}
+.cetvel h3{font-family:var(--hand);font-size:1.1rem;margin:16px 0 4px}
 .ticks{display:grid;grid-template-columns:auto auto;gap:3px 14px;font-size:.95rem;justify-content:start}
 .ticks .bx{display:inline-flex;gap:3px;vertical-align:middle}
 .ticks .bx i{width:14px;height:14px;border:1.5px solid var(--pen);display:inline-grid;place-items:center;font-style:normal;font-size:.8rem;line-height:1;border-radius:2px}
@@ -244,7 +245,35 @@ button{font:inherit;color:inherit}
 .scrim{display:none}
 
 
+.menu .gand{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.menu .gand h3{margin:0;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.gapp{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.18)}
+.gapp .mono{flex:none;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-family:var(--display);font-weight:700;color:#fff;font-size:1.1rem}
+.gapp .tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.gapp .tx b{font-family:var(--display);font-size:1.02rem}
+.gapp .tx span{font-size:.82rem;color:var(--muted)}
+.gapp .ln{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.gapp a{font-size:.78rem;color:var(--amber);text-decoration:none;border:1px solid rgba(234,169,61,.4);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.gapp a:hover{background:var(--amber-soft)}
+.menu .about{margin:14px 0 0;font-size:.82rem;color:var(--muted);line-height:1.5}
+.menu .about a{color:var(--muted)}
+
 /* real-table score mode */
+.main.solo{grid-template-columns:1fr}
+.main.solo .sheet{display:none}
+.paper h2{align-items:center}
+.paper h2 small{font-family:var(--body)}
+.paper tr.ed{cursor:pointer}
+.paper tr.ed:hover td,.paper tr.ed:focus-visible td{background:rgba(34,64,140,.09)}
+.paper tr.ed:focus-visible{outline:2px solid var(--pen);outline-offset:-2px}
+.paper tr.cur td{background:rgba(234,169,61,.28)}
+.paper .add{font-weight:700;color:var(--pen)}
+.paper table{font-size:1rem}
+.sc-bar{position:sticky;bottom:-20px;margin:0 -18px -20px;padding:12px 18px calc(14px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:linear-gradient(rgba(51,18,26,0),rgba(51,18,26,.92) 30%);z-index:2}
+.sc-bar .grow{flex:1}
+.sc-ed .sc-card{background:none;border:0;padding:0}
+.noanim,.noanim .panel{animation:none!important}
+
 .scorer{position:relative;min-height:0;overflow:auto;border-radius:28px;background:radial-gradient(110% 85% at 50% 30%,var(--felt-hi),var(--felt) 52%,var(--felt-lo));box-shadow:inset 0 0 0 2px rgba(0,0,0,.3),inset 0 0 80px rgba(0,0,0,.5),0 0 0 8px var(--wood),0 0 0 9px #120a07,0 18px 40px rgba(0,0,0,.5);margin:9px;padding:20px 18px;overscroll-behavior:contain}
 .scorer .wrap{max-width:660px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
 .sc-card{background:rgba(20,8,8,.32);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
@@ -308,12 +337,17 @@ button{font:inherit;color:inherit}
   #scoresBtn{display:inline-block}
   .sheet{position:fixed;top:0;right:0;bottom:0;width:min(92vw,370px);z-index:15;border-radius:0;margin:0;transform:translateX(105%);transition:transform .25s;padding-top:calc(14px + env(safe-area-inset-top,0px));padding-bottom:calc(18px + env(safe-area-inset-bottom,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
   .sheet.open{transform:none}
-  .sheet .close{display:inline-block;font-family:var(--body);font-size:.85rem;color:var(--pen);border-color:rgba(34,64,140,.3);padding:3px 10px}
+  .cetvel .close{display:inline-block;font-family:var(--body);font-size:.85rem;color:var(--pen);border-color:rgba(34,64,140,.3);padding:3px 10px}
   .scrim.open{display:block;position:fixed;inset:0;z-index:14;background:rgba(0,0,0,.45)}
 }
 @media (max-width:760px){
   .mark svg{display:none}
   .scorer{margin:7px 2px;padding:14px 10px;border-radius:20px}
+  .sc-bar{bottom:-14px;margin:0 -10px -14px;padding:10px 10px calc(12px + env(safe-area-inset-bottom,0px))}
+  .sc-bar .big{order:-1;flex-basis:100%}
+  .sc-bar .btn:not(.big){font-size:.82rem;padding:6px 10px}
+  .paper{padding:12px 8px 14px}
+  .paper table{font-size:.92rem}
   .sc-card{padding:14px 12px}
   .cnt-row{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"who who pts" "step rest rest";row-gap:6px}
   .cnt-row .restb{justify-self:start}
@@ -385,7 +419,7 @@ button{font:inherit;color:inherit}
       <div class="fx" id="fx"></div>
     </section>
     <section class="scorer" id="scorer" hidden></section>
-    <aside class="sheet" id="sheet"></aside>
+    <aside class="sheet cetvel" id="sheet"></aside>
   </div>
 </div>
 <div class="scrim" id="scrim"></div>
@@ -616,15 +650,22 @@ function kozCard(S,p,L){
 const NEED={el:13,kupa:13,erkek:8,kiz:4,koz:13};
 const PER={el:-50,kupa:-30,erkek:-60,kiz:-100,koz:50};
 function tableNew(names,first){return {v:1,names:names.slice(0,4),first,hands:[],cur:null}}
-function tableView(G){
+/* quotas and scores over every hand except index skip (pass -1 for all of them) */
+function tableTally(G,skip){
   const quota=[0,1,2,3].map(()=>({pen:0,koz:0})),penUsed={el:0,kupa:0,erkek:0,kiz:0,rifki:0,soniki:0},scores=[0,0,0,0];
-  for(const h of G.hands){
+  G.hands.forEach((h,i)=>{
+    if(i===skip)return;
     if(h.k==='koz')quota[h.chooser].koz++;else{quota[h.chooser].pen++;penUsed[h.k]++}
-    h.pts.forEach((v,i)=>scores[i]+=v);
-  }
-  const deal=G.hands.length;
-  return {quota,penUsed,scores,deal,chooser:(G.first+deal)%4,done:deal>=20};
+    h.pts.forEach((v,j)=>scores[j]+=v);
+  });
+  return {quota,penUsed,scores};
 }
+function tableView(G){
+  const deal=G.hands.length;
+  return {...tableTally(G,-1),deal,chooser:(G.first+deal)%4,done:deal>=20};
+}
+const tableChooser=(G,i)=>(G.first+i)%4;
+function tableOptions(G,i){const q=tableTally(G,i);return options({quota:q.quota,penUsed:q.penUsed},tableChooser(G,i))}
 function tableEntry(k){return k==='rifki'?{who:-1}:k==='soniki'?{t12:-1,t13:-1}:{counts:[0,0,0,0]}}
 function tableValid(k,e){
   const seat=x=>Number.isInteger(x)&&x>=0&&x<4;
@@ -637,16 +678,18 @@ function tablePoints(k,e){
   if(k==='soniki')return [0,1,2,3].map(p=>(p===e.t12?-180:0)+(p===e.t13?-180:0));
   return e.counts.map(c=>c*PER[k]);
 }
-function tableAdd(G,k,trump,e){
-  const V=tableView(G);
-  if(V.done||!tableValid(k,e))return false;
-  const o=options({quota:V.quota,penUsed:V.penUsed},V.chooser).find(x=>x.k===k);
+/* write hand i: i equal to the number of hands appends the next one, a smaller i replaces a saved hand */
+function tableSet(G,i,k,trump,e){
+  if(!Number.isInteger(i)||i<0||i>G.hands.length||i>=20||!tableValid(k,e))return false;
+  const o=tableOptions(G,i).find(x=>x.k===k);
   if(!o||!o.ok)return false;
   if(k==='koz'&&!SUITS.includes(trump))return false;
-  G.hands.push({chooser:V.chooser,k,trump:k==='koz'?trump:null,entry:JSON.parse(JSON.stringify(e)),pts:tablePoints(k,e)});
+  const h={chooser:tableChooser(G,i),k,trump:k==='koz'?trump:null,entry:JSON.parse(JSON.stringify(e)),pts:tablePoints(k,e)};
+  if(i===G.hands.length)G.hands.push(h);else G.hands[i]=h;
   G.cur=null;
   return true;
 }
+const tableAdd=(G,k,trump,e)=>tableSet(G,G.hands.length,k,trump,e);
 /*ENGINE-END*/
 
 /*I18N-START*/
@@ -711,9 +754,10 @@ en:{
   rZero:'Penalties total −5200 and trump games +5200, so the four final scores always add up to zero.',
   rAuto:'The Auto button beside your name plays the rest of the current hand for you, then switches itself off.',
   rScore:'Score mode keeps the King cetveli for a game played with real cards: choose the game for each hand, then enter who took what.',
-  modePlay:'Play',modeScore:'Score',modeAria:'Mode',
+  modePlay:'Play',modeScore:'Sheet',modeAria:'Mode',
+  gand:{title:'Also from Gand',heliobane:'A retro space shooter',commit:'A software-career sim',about:'King is made by Gand. No ads, no purchases, no tracking.',privacy:'Privacy',source:'Source code'},
   sc:{
-    title:'Score a real game',
+    title:'Score sheet',
     setupSub:'Playing King with real cards? Enter the four players in seating order, going counter-clockwise. The app keeps the King cetveli, moves the pick round the table and enforces the 3 penalty, 2 koz and twice-per-penalty rules.',
     player:n=>`Player ${n}`,seats:'Players, in seating order',firstPick:'Who picks first?',start:'Start scoring',
     picks:n=>`${n} picks the game`,left:(pen,koz)=>`${pen} penalty and ${koz} koz picks left`,
@@ -726,7 +770,7 @@ en:{
     share:'Share results',copied:'Results copied',newTable:'New table',
     confirmNew:'Start a new table?',confirmNewSub:'The current score sheet will be cleared. Player names are kept.',
     shareTitle:'Copy the results',shareSub:'Copying was blocked. Select the text and copy it yourself.',
-    recent:'Hands so far'
+    recent:'Hands so far',enterHand:n=>`Enter hand ${n}`,editHand:n=>`Edit hand ${n}`,cancel:'Cancel',tapRow:'Tap any hand to fix it'
   }
 },
 tr:{
@@ -790,9 +834,10 @@ tr:{
   rZero:'Cezaların toplamı −5200, kozların toplamı +5200. Bu yüzden dört oyuncunun puanları toplamı her zaman sıfırdır.',
   rAuto:'Adının yanındaki Otomatik düğmesi, o oyunun kalanını senin yerine oynar ve oyun bitince kendiliğinden kapanır.',
   rScore:'Skor modu, gerçek kartlarla oynanan bir partinin King cetvelini tutar: her oyunda seçilen oyunu işaretleyin, sonra kimin ne aldığını girin.',
-  modePlay:'Oyna',modeScore:'Skor',modeAria:'Mod',
+  modePlay:'Oyna',modeScore:'Cetvel',modeAria:'Mod',
+  gand:{title:'Gand’dan diğer oyunlar',heliobane:'Retro uzay nişancı oyunu',commit:'Yazılımcı kariyer simülasyonu',about:'King’i Gand yaptı. Reklam yok, satın alma yok, takip yok.',privacy:'Gizlilik',source:'Kaynak kod'},
   sc:{
-    title:'Gerçek masa skoru',
+    title:'Puan cetveli',
     setupSub:'Gerçek kartlarla mı oynuyorsunuz? Dört oyuncuyu oturma sırasına göre, saat yönünün tersine yazın. Uygulama King cetvelini tutar, seçim sırasını döndürür ve 3 ceza, 2 koz ve her cezanın en fazla iki kez oynanması kurallarını uygular.',
     player:n=>`Oyuncu ${n}`,seats:'Oyuncular, oturma sırasıyla',firstPick:'İlk kim seçiyor?',start:'Skoru başlat',
     picks:n=>`Oyunu ${n} seçiyor`,left:(pen,koz)=>`Kalan: ${pen} ceza, ${koz} koz`,
@@ -805,7 +850,7 @@ tr:{
     share:'Sonuçları paylaş',copied:'Sonuçlar kopyalandı',newTable:'Yeni masa',
     confirmNew:'Yeni masa başlasın mı?',confirmNewSub:'Şu anki puan cetveli silinecek. Oyuncu adları kalır.',
     shareTitle:'Sonuçları kopyala',shareSub:'Kopyalama engellendi. Metni seçip kendiniz kopyalayın.',
-    recent:'Oynanan oyunlar'
+    recent:'Oynanan oyunlar',enterHand:n=>`${n}. oyunu gir`,editHand:n=>`${n}. oyunu düzelt`,cancel:'Vazgeç',tapRow:'Düzeltmek için bir oyuna dokunun'
   }
 },
 ja:{
@@ -868,9 +913,10 @@ ja:{
   rZero:'ペナルティの合計は−5200、切り札の合計は+5200なので、4人の最終得点の合計は必ず0になります。',
   rAuto:'名前の横のオートボタンを押すと、そのディールの残りを代わりにプレイし、終わると自動でオフになります。',
   rScore:'記録モードでは、実際のカードで遊ぶゲームの点数表をつけられます。各ディールで選ばれたゲームを選び、誰が何を取ったかを入力します。',
-  modePlay:'対戦',modeScore:'記録',modeAria:'モード',
+  modePlay:'対戦',modeScore:'点数表',modeAria:'モード',
+  gand:{title:'Gandのほかのゲーム',heliobane:'レトロなシューティング',commit:'ソフトウェア開発者のキャリアシム',about:'KingはGandが作りました。広告なし、課金なし、トラッキングなし。',privacy:'プライバシー',source:'ソースコード'},
   sc:{
-    title:'実際のゲームを記録',
+    title:'点数表',
     setupSub:'実際のカードでKingを遊ぶときに使えます。4人を座った順（反時計回り）に入力してください。アプリが点数表をつけ、選ぶ人を順番に回し、ペナルティ3回・切り札2回・各ペナルティ最大2回のルールを守ります。',
     player:n=>`プレイヤー${n}`,seats:'プレイヤー（座った順）',firstPick:'最初に選ぶ人',start:'記録を始める',
     picks:n=>`${n}がゲームを選びます`,left:(pen,koz)=>`残り：ペナルティ${pen}回、切り札${koz}回`,
@@ -883,7 +929,7 @@ ja:{
     share:'結果を共有',copied:'結果をコピーしました',newTable:'新しい記録',
     confirmNew:'新しい記録を始めますか？',confirmNewSub:'現在の点数表は消去されます。プレイヤー名は残ります。',
     shareTitle:'結果をコピー',shareSub:'コピーがブロックされました。テキストを選択してコピーしてください。',
-    recent:'これまでのディール'
+    recent:'これまでのディール',enterHand:n=>`第${n}ディールを入力`,editHand:n=>`第${n}ディールを修正`,cancel:'キャンセル',tapRow:'ディールをタップすると修正できます'
   }
 }
 };
@@ -1050,7 +1096,7 @@ function renderHeader(){
     :`<span class="lb long">${t.handOf(deal+1)}</span><span class="lb short">${t.handShort(deal+1)}</span><span class="dots" aria-hidden="true">${Array.from({length:20},(_,i)=>`<i class="${i<cur?'done':i===cur?'cur':''}"></i>`).join('')}</span>`;
   $('#modeSw').innerHTML=[['play',t.modePlay],['score',t.modeScore]].map(([m,l])=>`<button type="button" data-mode="${m}" aria-pressed="${m===mode}">${l}</button>`).join('');
   $('#modeSw').setAttribute('aria-label',t.modeAria);
-  $('#table').hidden=sc;$('#scorer').hidden=!sc;
+  $('#table').hidden=sc;$('#scorer').hidden=!sc;$('.main').classList.toggle('solo',sc);$('#scoresBtn').hidden=sc;
   const chip=$('#chip');
   if(!sc&&S.contract&&S.phase!=='choose'&&S.phase!=='gameEnd'){
     const c=t.con[S.contract];
@@ -1097,32 +1143,37 @@ function sheetData(){
     const name=scName,ini=scIni;
     if(!G)return {hist:[],cur:0,curK:null,curTrump:null,chooserOf:d=>(scDraft.first+d)%4,scores:[0,0,0,0],penUsed:{el:0,kupa:0,erkek:0,kiz:0,rifki:0,soniki:0},quota:[0,1,2,3].map(()=>({pen:0,koz:0})),name,ini};
     const V=tableView(G);
-    return {hist:G.hands,cur:V.done?-1:V.deal,curK:G.cur&&G.cur.k,curTrump:G.cur&&G.cur.trump,chooserOf:d=>(G.first+d)%4,scores:V.scores,penUsed:V.penUsed,quota:V.quota,name,ini};
+    return {hist:G.hands,cur:V.done?-1:V.deal,curK:G.cur&&G.cur.i===V.deal?G.cur.k:null,curTrump:G.cur&&G.cur.trump,chooserOf:d=>(G.first+d)%4,scores:V.scores,penUsed:V.penUsed,quota:V.quota,name,ini};
   }
   return {hist:S.history,cur:S.phase==='gameEnd'?-1:S.deal,curK:S.contract,curTrump:S.trump,chooserOf:d=>d%4,scores:S.scores,penUsed:S.penUsed,quota:S.quota,name:nm,ini:p=>nm(p).charAt(0)};
 }
-function renderSheet(){
-  const t=T(),rows=[],v=sheetData();
+function sheetBody(v,edit){
+  const t=T(),rows=[];
   for(let d=0;d<20;d++){
     const h=v.hist[d];
     if(h){
-      rows.push(`<tr><td class="n">${d+1}</td><td class="g">${gameShort(h.k,h.trump)} <span class="by">${esc(v.ini(h.chooser))}</span></td>${h.pts.map(v=>`<td class="${v<0?'neg':''}">${v?fmt(v):'·'}</td>`).join('')}</tr>`);
+      const a=edit?` class="ed" data-act="edit" data-i="${d}" tabindex="0" role="button" aria-label="${esc(T().sc.editHand(d+1))}"`:'';
+      rows.push(`<tr${a}><td class="n">${d+1}</td><td class="g">${gameShort(h.k,h.trump)} <span class="by">${esc(v.ini(h.chooser))}</span></td>${h.pts.map(x=>`<td class="${x<0?'neg':''}">${x?fmt(x):'·'}</td>`).join('')}</tr>`);
     }else{
-      const cur=d===v.cur;
-      const g=(cur&&v.curK?gameShort(v.curK,v.curTrump)+' ':'')+`<span class="by">${esc(v.ini(v.chooserOf(d)))}</span>`;
-      rows.push(`<tr class="${cur?'cur':''}"><td class="n">${d+1}</td><td class="g">${g}</td><td></td><td></td><td></td><td></td></tr>`);
+      const cur=d===v.cur,who=`<span class="by">${esc(v.ini(v.chooserOf(d)))}</span>`;
+      const g=cur&&edit?`<span class="add">＋</span> ${who}`:(cur&&v.curK?gameShort(v.curK,v.curTrump)+' ':'')+who;
+      const a=cur&&edit?` class="cur ed" data-act="new" tabindex="0" role="button" aria-label="${esc(T().sc.enterHand(d+1))}"`:` class="${cur?'cur':''}"`;
+      rows.push(`<tr${a}><td class="n">${d+1}</td><td class="g">${g}</td><td></td><td></td><td></td><td></td></tr>`);
     }
   }
   const tick=k=>{const u=v.penUsed[k];return `<span class="bx"><i>${u>0?'✕':''}</i><i>${u>1?'✕':''}</i></span>`};
   const kozUsed=v.quota.reduce((a,q)=>a+q.koz,0);
   const dots=(n,of)=>'●'.repeat(n)+'○'.repeat(of-n);
-  $('#sheet').innerHTML=`<h2>${t.sheetTitle} <small>${t.sheetNote}</small><button type="button" class="btn close" id="sheetClose">${t.close}</button></h2>
-  <table><thead><tr><th>#</th><th>${t.colGame}</th>${[0,1,2,3].map(p=>`<th>${esc(v.name(p))}</th>`).join('')}</tr></thead>
+  return `<table><thead><tr><th>#</th><th>${t.colGame}</th>${[0,1,2,3].map(p=>`<th>${esc(v.name(p))}</th>`).join('')}</tr></thead>
   <tbody>${rows.join('')}<tr class="tot"><td></td><td>${t.total}</td>${v.scores.map(x=>`<td class="${x<0?'neg':''}">${fmt(x)}</td>`).join('')}</tr></tbody></table>
   <h3>${t.penPlayed}</h3>
   <div class="ticks">${PEN.map(k=>`<span>${t.con[k].name}</span>${tick(k)}`).join('')}<span>${t.con.koz.name}</span><span class="pdots">${dots(kozUsed,8)}</span></div>
   <h3>${t.picksLeft}</h3>
   <div class="quota"><span class="h"></span><span class="h">${t.colPen}</span><span class="h">${t.colKoz}</span>${[0,1,2,3].map(i=>`<span>${esc(v.name(i))}</span><span class="pdots">${dots(3-v.quota[i].pen,3)}</span><span class="pdots">${dots(2-v.quota[i].koz,2)}</span>`).join('')}</div>`;
+}
+function renderSheet(){
+  const t=T();
+  $('#sheet').innerHTML=`<h2>${t.sheetTitle} <small>${t.sheetNote}</small><button type="button" class="btn close" id="sheetClose">${t.close}</button></h2>${sheetBody(sheetData(),false)}`;
   const cur=$('#sheet tr.cur');
   if(cur&&!sheetOpen&&window.innerWidth>960){const sh=$('#sheet');if(cur.offsetTop>sh.clientHeight-80)sh.scrollTop=cur.offsetTop-sh.clientHeight/2}
 }
@@ -1142,15 +1193,17 @@ function renderOverlay(){
   const ov=$('#overlay');
   let kind=null;
   if(manualOv)kind=manualOv;
-  else if(mode==='score')kind=null;
+  else if(mode==='score')kind=G&&G.cur?'scEdit':null;
   else if(S.phase==='choose'&&S.chooser===0&&!S.auto)kind='choose';
   else if(S.phase==='handEnd')kind='handEnd';
   else if(S.phase==='gameEnd')kind='gameEnd';
-  const sig=mode+':'+kind+':'+S.deal+':'+S.phase+':'+lang+':'+(kind==='menu'?[fast,soundOn]:'');
+  const sig=mode+':'+kind+':'+S.deal+':'+S.phase+':'+lang+':'+(kind==='menu'?[fast,soundOn]:kind==='scEdit'?JSON.stringify(G.cur):'');
   if(sig===ovKind)return;
+  const same=!!ovKind&&ovKind.split(':')[1]===kind&&ovKind.split(':')[0]===mode,keep=same&&ov.querySelector('.panel')?ov.querySelector('.panel').scrollTop:0;
   ovKind=sig;
   if(!kind){ov.innerHTML='';return}
-  ov.innerHTML={choose:chooseHTML,handEnd:handEndHTML,gameEnd:gameEndHTML,rules:rulesHTML,confirmNew:confirmHTML,menu:menuHTML,confirmTable:confirmTableHTML,share:shareHTML}[kind]();
+  ov.innerHTML={choose:chooseHTML,handEnd:handEndHTML,gameEnd:gameEndHTML,rules:rulesHTML,confirmNew:confirmHTML,menu:menuHTML,confirmTable:confirmTableHTML,share:shareHTML,scEdit:scEditHTML}[kind]();
+  if(same){const o=ov.querySelector('.ov'),pn=ov.querySelector('.panel');if(o)o.classList.add('noanim');if(pn)pn.scrollTop=keep}
   wireOverlay(kind);
 }
 function openManual(k){clearTimeout(timer);toggleSheet(false);manualOv=k;ovKind=null;renderOverlay()}
@@ -1227,7 +1280,18 @@ function menuHTML(){
     <div class="row"><span>${t.speed}</span><span id="menuSpeed">${seg(t.speed,[['n',t.normal],['f',t.fast]],fast?'f':'n')}</span></div>
     <div class="row"><span>${t.sound}</span><span id="menuSound">${seg(t.sound,[['1',t.on],['0',t.off]],soundOn?'1':'0')}</span></div>
     <div class="mb"><button type="button" class="btn" id="menuRules">${t.rules}</button><button type="button" class="btn" id="menuNew">${t.newGame}</button></div>
+    ${gandHTML()}
     <div class="actions"><button type="button" class="btn primary" id="closeBtn">${t.close}</button></div></div></div>`;
+}
+/* "Also from Gand": a menu entry only, never in the game flow (Play counts in-game promotion as ads) */
+const GAND_APPS=[
+  {name:'HELIOBANE',key:'heliobane',color:'#3b6fb6',links:[['Google Play','https://play.google.com/store/apps/details?id=games.gand.heliobane']]},
+  {name:'COMMIT!!!',key:'commit',color:'#2f9c95',links:[['Google Play','https://play.google.com/store/apps/details?id=tr.gand.commit'],['App Store','https://apps.apple.com/app/id6818084996']]}
+];
+function gandHTML(){
+  const g=T().gand;
+  return `<div class="gand"><h3>${g.title}</h3>${GAND_APPS.map(a=>`<div class="gapp"><span class="mono" style="background:${a.color}" aria-hidden="true">${a.name.charAt(0)}</span><span class="tx"><b>${a.name}</b><span>${g[a.key]}</span></span><span class="ln">${a.links.map(([l,u])=>`<a href="${u}" target="_blank" rel="noopener">${l}</a>`).join('')}</span></div>`).join('')}</div>
+    <p class="about">${g.about} <a href="https://king.arda.tr/privacy.html" target="_blank" rel="noopener">${g.privacy}</a> · <a href="https://github.com/c0ze/king" target="_blank" rel="noopener">${g.source}</a></p>`;
 }
 function wireOverlay(kind){
   const ov=$('#overlay');
@@ -1282,12 +1346,6 @@ function toast(msg){const el=$('#toast');el.textContent=msg;el.hidden=false;clea
 function scTotals(V){
   return `<div class="sc-tots">${[0,1,2,3].map(p=>`<div class="sc-tot${!V.done&&V.chooser===p?' pick':''}">${scAv(p,!V.done&&V.chooser===p?`<i class="crownb">${crownSvg('')}</i>`:'')}<span class="n">${esc(scName(p))}</span><span class="v">${fmt(V.scores[p])}</span></div>`).join('')}</div>`;
 }
-function scHistory(){
-  if(!G.hands.length)return '';
-  const t=T();
-  return `<div class="sc-card"><h3>${t.sc.recent}</h3><div class="hist"><span class="hh">#</span><span class="hh">${t.colGame}</span>${[0,1,2,3].map(p=>`<span class="hh r">${esc(scName(p))}</span>`).join('')}
-    ${G.hands.map((h,i)=>`<span class="n">${i+1}</span><span class="g">${gameShort(h.k,h.trump)} · ${esc(scName(h.chooser))}</span>${h.pts.map(v=>`<span class="r ${v<0?'neg':v>0?'pos':''}">${v?fmt(v):'·'}</span>`).join('')}`).reverse().join('')}</div></div>`;
-}
 const chipRow=(act,sel)=>`<div class="chips">${[0,1,2,3].map(p=>`<button type="button" class="chipb" data-act="${act}" data-p="${p}" aria-pressed="${sel===p}">${scAv(p)}<span class="n">${esc(scName(p))}</span></button>`).join('')}</div>`;
 function setupHTML(){
   const s=T().sc;
@@ -1297,15 +1355,14 @@ function setupHTML(){
     <h3>${s.firstPick}</h3><div id="scFirst">${chipRow('first',scDraft.first)}</div>
     <div class="sc-actions"><span class="grow"></span><button type="button" class="btn primary big" data-act="start">${s.start}</button></div></div>`;
 }
-function pickHTML(V){
-  const t=T(),s=t.sc,p=V.chooser,q=V.quota[p];
-  return `<div class="sc-card"><div class="sc-head"><span class="hn">${t.handOf(V.deal+1)}</span></div>${scTotals(V)}
+function pickBody(){
+  const t=T(),s=t.sc,i=G.cur.i,p=tableChooser(G,i),q=tableTally(G,i).quota[p];
+  return `<div class="sc-card"><div class="sc-head"><span class="hn">${i<G.hands.length?s.editHand(i+1):t.handOf(i+1)}</span></div>
     <h2>${esc(s.picks(scName(p)))}</h2><p class="sub">${s.left(3-q.pen,2-q.koz)}</p>
-    <div class="opts">${options({quota:V.quota,penUsed:V.penUsed},p).map(x=>tileHTML(x,false)).join('')}</div>
-    ${G.hands.length?`<div class="sc-actions"><button type="button" class="btn" data-act="undo">${s.undo}</button></div>`:''}</div>${scHistory()}`;
+    <div class="opts">${tableOptions(G,i).map(x=>tileHTML(x,false)).join('')}</div></div>`;
 }
-function enterHTML(V){
-  const t=T(),s=t.sc,k=G.cur.k,e=G.cur.entry;
+function entryBody(){
+  const t=T(),s=t.sc,k=G.cur.k,e=G.cur.entry,i=G.cur.i;
   let body='';
   if(NEED[k]){
     const need=NEED[k],sum=e.counts.reduce((a,b)=>a+b,0);
@@ -1314,26 +1371,37 @@ function enterHTML(V){
       <button type="button" class="btn restb" data-act="rest" data-p="${p}" ${sum>=need?'disabled':''}>${s.rest}</button><span class="ptv ${v<0?'neg':v>0?'pos':''}">${fmt(v)}</span></div>`}).join('');
   }else if(k==='rifki')body=`<div class="qgroup"><p>${s.whoKH}</p>${chipRow('who',e.who)}</div>`;
   else body=`<div class="qgroup"><p>${s.t12}</p>${chipRow('t12',e.t12)}</div><div class="qgroup"><p>${s.t13}</p>${chipRow('t13',e.t13)}</div>`;
-  return `<div class="sc-card"><div class="sc-head"><span class="hn">${t.handOf(V.deal+1)}</span><span class="spacer"></span><button type="button" class="btn" data-act="change">${s.changePick}</button></div>
-    <div class="sc-game"><span class="gl">${glyph(k,G.cur.trump)}</span><b>${gameName(k,G.cur.trump)}</b><span class="by">${esc(s.pickedBy(scName(V.chooser)))}</span></div>
-    ${body}
-    <div class="sc-actions"><span class="grow"></span><button type="button" class="btn primary big" data-act="save" ${tableValid(k,e)?'':'disabled'}>${s.save}</button></div></div>${scTotals(V)}${scHistory()}`;
+  return `<div class="sc-card"><div class="sc-head"><span class="hn">${i<G.hands.length?s.editHand(i+1):t.handOf(i+1)}</span><span class="spacer"></span><button type="button" class="btn" data-act="change">${s.changePick}</button></div>
+    <div class="sc-game"><span class="gl">${glyph(k,G.cur.trump)}</span><b>${gameName(k,G.cur.trump)}</b><span class="by">${esc(s.pickedBy(scName(tableChooser(G,i))))}</span></div>
+    ${body}</div>`;
 }
-function doneHTML(V){
+function scEditHTML(){
+  const s=T().sc,ready=G.cur.k&&tableValid(G.cur.k,G.cur.entry);
+  return `<div class="ov sheetish"><div class="panel sc-ed" role="dialog" aria-label="${esc(G.cur.i<G.hands.length?s.editHand(G.cur.i+1):s.enterHand(G.cur.i+1))}">
+    ${G.cur.k?entryBody():pickBody()}
+    <div class="actions"><button type="button" class="btn" data-act="cancel">${s.cancel}</button>${G.cur.k?`<button type="button" class="btn primary big" data-act="save" ${ready?'':'disabled'}>${s.save}</button>`:''}</div></div></div>`;
+}
+function doneCard(V){
   const t=T(),s=t.sc,order=[0,1,2,3].sort((a,b)=>V.scores[b]-V.scores[a]),top=Math.max(1,...V.scores.map(Math.abs));
   const sum=V.scores.reduce((a,b)=>a+b,0);
   return `<div class="sc-card sc-done">${crownSvg('win-crown')}<h2>${esc(t.win(scName(order[0])))}</h2><p class="sub">${s.doneSub(fmt(sum))}</p>
     <div class="hres"><span class="h">${t.thPlayer}</span><span></span><span class="h">${t.thTotal}</span><span class="h">${t.thPlace}</span>
-    ${order.map((p,i)=>{const v=V.scores[p];return `<span class="who">${scAv(p)}${esc(scName(p))}</span><span class="barw"><i class="${v<0?'neg':''}" style="width:${(Math.abs(v)/top*100).toFixed(1)}%"></i></span><span class="v ${v<0?'neg':v>0?'pos':''}">${fmt(v)}</span><span class="t">${i+1}</span>`}).join('')}</div>
-    <div class="sc-actions" style="width:100%"><button type="button" class="btn" data-act="undo">${s.undo}</button><span class="grow"></span><button type="button" class="btn" data-act="newtable">${s.newTable}</button><button type="button" class="btn primary" data-act="share">${s.share}</button></div></div>${scHistory()}`;
+    ${order.map((p,i)=>{const v=V.scores[p];return `<span class="who">${scAv(p)}${esc(scName(p))}</span><span class="barw"><i class="${v<0?'neg':''}" style="width:${(Math.abs(v)/top*100).toFixed(1)}%"></i></span><span class="v ${v<0?'neg':v>0?'pos':''}">${fmt(v)}</span><span class="t">${i+1}</span>`}).join('')}</div></div>`;
+}
+function paperHTML(V){
+  const s=T().sc;
+  return `${V.done?doneCard(V):scTotals(V)}
+  <div class="cetvel paper"><h2>${s.title} <small>${G.hands.length?s.tapRow:''}</small></h2>${sheetBody(sheetData(),true)}</div>
+  <div class="sc-bar">${G.hands.length?`<button type="button" class="btn" data-act="undo">${s.undo}</button>`:''}<span class="grow"></span>
+    <button type="button" class="btn" data-act="newtable">${s.newTable}</button>
+    ${G.hands.length?`<button type="button" class="btn${V.done?' primary':''}" data-act="share">${s.share}</button>`:''}
+    ${V.done?'':`<button type="button" class="btn primary big" data-act="new">${s.enterHand(V.deal+1)}</button>`}</div>`;
 }
 function renderScorer(){
   if(mode!=='score')return;
-  const el=$('#scorer'),focus=document.activeElement&&document.activeElement.id;
-  let h;
-  if(!G)h=setupHTML();
-  else{const V=tableView(G);h=V.done?doneHTML(V):G.cur&&G.cur.k?enterHTML(V):pickHTML(V)}
-  el.innerHTML=`<div class="wrap">${h}</div>`;
+  const el=$('#scorer'),focus=document.activeElement&&document.activeElement.id,top=el.scrollTop;
+  el.innerHTML=`<div class="wrap">${G?paperHTML(tableView(G)):setupHTML()}</div>`;
+  el.scrollTop=top;
   if(focus&&focus.startsWith('scName')){const i=$('#'+focus);if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}}
 }
 function resultsText(){
@@ -1356,20 +1424,37 @@ function scAct(act,b){
   if(act==='start'){G=tableNew(scDraft.names.map(n=>n.trim()),scDraft.first);saveG();render();return}
   if(!G)return;
   const e=G.cur&&G.cur.entry;
-  if(act==='inc'&&e){if(e.counts.reduce((a,b)=>a+b,0)<NEED[G.cur.k])e.counts[p]++}
+  if(act==='new'){if(tableView(G).done)return;G.cur={i:G.hands.length,k:null,trump:null,entry:null}}
+  else if(act==='edit'){const i=+b.dataset.i,h=G.hands[i];if(!h)return;G.cur={i,k:h.k,trump:h.trump,entry:JSON.parse(JSON.stringify(h.entry))}}
+  else if(act==='inc'&&e){if(e.counts.reduce((a,b)=>a+b,0)<NEED[G.cur.k])e.counts[p]++}
   else if(act==='dec'&&e){if(e.counts[p]>0)e.counts[p]--}
   else if(act==='rest'&&e){const sum=e.counts.reduce((a,b)=>a+b,0);e.counts[p]+=NEED[G.cur.k]-sum}
   else if(act==='who'&&e)e.who=p;
   else if((act==='t12'||act==='t13')&&e)e[act]=p;
-  else if(act==='change')G.cur=null;
-  else if(act==='save'&&G.cur){if(!tableAdd(G,G.cur.k,G.cur.trump,G.cur.entry))return;snd('card')}
+  else if(act==='change'&&G.cur){G.cur.k=null}
+  else if(act==='cancel')G.cur=null;
+  else if(act==='save'&&G.cur){if(!tableSet(G,G.cur.i,G.cur.k,G.cur.trump,G.cur.entry))return;snd('card')}
   else if(act==='undo'){if(!G.hands.length)return;G.hands.pop();G.cur=null;toast(T().sc.undone)}
   else if(act==='newtable'){openManual('confirmTable');return}
   else if(act==='share'){shareResults();return}
   else return;
   saveG();render();
 }
-function scPick(k,trump){if(!G||tableView(G).done)return;G.cur={k,trump:trump||null,entry:tableEntry(k)};saveG();render();$('#scorer').scrollTop=0}
+function scPick(k,trump){
+  if(!G||!G.cur)return;
+  const h=G.hands[G.cur.i],keep=h&&h.k===k;
+  G.cur.k=k;G.cur.trump=k==='koz'?trump:null;G.cur.entry=keep?JSON.parse(JSON.stringify(h.entry)):tableEntry(k);
+  saveG();render();
+}
+function scClick(e){
+  const opt=e.target.closest('.opt');
+  if(opt&&!opt.disabled){
+    const k=opt.dataset.k;
+    if(k==='koz'){const s=e.target.closest('.suit');if(s)scPick('koz',s.dataset.s);else opt.querySelector('.suits').classList.add('show');return}
+    scPick(k);return;
+  }
+  const b=e.target.closest('[data-act]');if(b&&!b.disabled)scAct(b.dataset.act,b);
+}
 function setMode(m){
   if(m===mode)return;
   mode=m;pref('mode',m);clearTimeout(timer);toggleSheet(false);ovKind=null;render();
@@ -1429,16 +1514,14 @@ function setLang(l){
 
 $('#rulesBtn').addEventListener('click',()=>openManual('rules'));
 $('#modeSw').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setMode(b.dataset.mode)});
-$('#scorer').addEventListener('click',e=>{
-  const opt=e.target.closest('.opt');
-  if(opt&&!opt.disabled){
-    const k=opt.dataset.k;
-    if(k==='koz'){const s=e.target.closest('.suit');if(s)scPick('koz',s.dataset.s);else opt.querySelector('.suits').classList.add('show');return}
-    scPick(k);return;
-  }
-  const b=e.target.closest('[data-act]');if(b&&!b.disabled)scAct(b.dataset.act,b);
-});
-$('#scorer').addEventListener('keydown',e=>{const s=e.target.closest('.suit');if(s&&(e.key==='Enter'||e.key===' ')){e.preventDefault();scPick('koz',s.dataset.s)}});
+$('#scorer').addEventListener('click',scClick);
+$('#overlay').addEventListener('click',e=>{if(e.target.closest('.sc-ed'))scClick(e)});
+const scKey=e=>{
+  const s=e.target.closest('.suit');if(s&&(e.key==='Enter'||e.key===' ')){e.preventDefault();e.stopPropagation();scPick('koz',s.dataset.s);return}
+  const r=e.target.closest('tr[data-act]');if(r&&(e.key==='Enter'||e.key===' ')){e.preventDefault();scAct(r.dataset.act,r)}
+};
+$('#scorer').addEventListener('keydown',scKey);
+$('#overlay').addEventListener('keydown',e=>{if(e.target.closest('.sc-ed'))scKey(e)});
 $('#scorer').addEventListener('input',e=>{const i=e.target.closest('input[data-p]');if(!i)return;scDraft.names[+i.dataset.p]=i.value;$('#scFirst').innerHTML=chipRow('first',scDraft.first);const a=i.parentElement.querySelector('.av span');if(a)a.textContent=scIni(+i.dataset.p);renderSheet()});
 $('#menuBtn').addEventListener('click',()=>openManual('menu'));
 $('#langInline').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setLang(b.dataset.lang)});
@@ -1447,7 +1530,7 @@ function toggleSheet(on){sheetOpen=on;$('#sheet').classList.toggle('open',on);$(
 $('#scoresBtn').addEventListener('click',()=>toggleSheet(!sheetOpen));
 $('#scrim').addEventListener('click',()=>toggleSheet(false));
 $('#sheet').addEventListener('click',e=>{if(e.target.closest('#sheetClose'))toggleSheet(false)});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(sheetOpen)toggleSheet(false);else if(manualOv)closeManual()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(sheetOpen)toggleSheet(false);else if(manualOv)closeManual();else if(mode==='score'&&G&&G.cur)scAct('cancel')}});
 window.addEventListener('resize',layoutHand);
 
 function boot(data){
@@ -1456,6 +1539,7 @@ function boot(data){
   if(!S||!S.hands){S=newGame();startDeal(S)}
   if(S.phase==='deal')startDeal(S);
   G=(data&&data.G&&data.G.v===1)?data.G:loadG();
+  if(G&&G.cur&&!Number.isInteger(G.cur.i))G.cur=null;
   try{if(localStorage.getItem(KEY+'-mode')==='score')mode='score'}catch(e){}
   if(data&&data.mode)mode=data.mode;
   render();step();
