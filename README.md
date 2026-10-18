@@ -5,6 +5,7 @@
 King is the Turkish trick-taking card game, played over 20 hands of *cezalar* (penalties)
 and *koz* (trumps). This version puts you at the table against three computer players.
 It runs in any modern browser, on desktop and phone, in English, Türkçe and 日本語.
+It also keeps score when you play King with real cards.
 
 ![King on desktop: a hand of Kız Almaz in progress, with the King cetveli score sheet on the right](docs/desktop-en.jpg)
 
@@ -22,6 +23,11 @@ It runs in any modern browser, on desktop and phone, in English, Türkçe and �
   you must beat the highest card or overtrump.
 - **Three computer players** who pick their games from the hand they hold and play to avoid
   penalties or to win tricks.
+- **Score mode for real tables.** Playing with real cards? Switch to *Score*, enter the four
+  players, and the app keeps the King cetveli for you. It moves the pick round the table,
+  only offers games the picker may still choose, and checks every hand adds up (13 tricks,
+  13 hearts, 8 kings and jacks, 4 queens) before saving. Undo the last hand at any time,
+  and share the final results as text.
 - **Auto.** The button next to your name plays the rest of the current hand for you,
   including your pick, then switches itself off.
 - **English, Turkish and Japanese**, switchable at any time. Turkish uses table words
@@ -55,7 +61,7 @@ the in-game **Rules** screen.
 There are no dependencies. Node 18 or newer is enough.
 
 ```sh
-npm test            # play 300 bot games: legal cards, zero-sum scores, quotas met; check all translations
+npm test            # 300 bot games and 300 score-mode tables: legal, zero-sum, quotas met; all translations present
 npm run build       # write the static site to dist/
 npm run serve       # build, then serve dist/ on http://localhost:8417
 npm run screenshots # retake docs/*.jpg with headless Chrome (needs npm run serve running)

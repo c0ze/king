@@ -10,7 +10,7 @@ const src = fs.readFileSync(path.join(root, 'src/game.html'), 'utf8');
 const between = (a, b) => src.split(a)[1].split(b)[0];
 const ctx = vm.createContext({ Math, console });
 vm.runInContext(between('/*ENGINE-START*/', '/*ENGINE-END*/') + between('/*I18N-START*/', '/*I18N-END*/') +
-  ';globalThis.E={newGame,startDeal,botChoose,choose,botCard,applyPlay,resolveTrick,nextDeal,cid,legal,I18N};', ctx);
+  ';globalThis.E={newGame,startDeal,botChoose,choose,botCard,applyPlay,resolveTrick,nextDeal,cid,legal,I18N,tableNew,tableView,tableAdd,tableEntry,tableValid,options,NEED,SUITS};', ctx);
 const E = ctx.E;
 
 const GAMES = Number(process.argv[2] || 300);
@@ -35,6 +35,30 @@ for (let g = 0; g < GAMES; g++) {
   if (S.quota.some(q => q.pen !== 3 || q.koz !== 2)) fail('quotas', JSON.stringify(S.quota));
 }
 
+// Real-table score mode: random legal tables must finish after 20 hands and sum to zero;
+// bad entries (wrong totals, used-up picks, missing trump) must be refused.
+const rnd = n => Math.floor(Math.random() * n);
+for (let g = 0; g < GAMES; g++) {
+  const G = E.tableNew(['A', 'B', 'C', 'D'], rnd(4));
+  while (!E.tableView(G).done) {
+    const V = E.tableView(G);
+    const ok = E.options({ quota: V.quota, penUsed: V.penUsed }, V.chooser).filter(o => o.ok);
+    const bad = E.options({ quota: V.quota, penUsed: V.penUsed }, V.chooser).filter(o => !o.ok);
+    const k = ok[rnd(ok.length)].k, e = E.tableEntry(k);
+    if (k === 'rifki') e.who = rnd(4);
+    else if (k === 'soniki') { e.t12 = rnd(4); e.t13 = rnd(4); }
+    else { for (let i = 0; i < E.NEED[k]; i++) e.counts[rnd(4)]++; }
+    if (e.counts && E.tableAdd(G, k, 'S', { counts: e.counts.map((c, i) => i ? c : c + 1) })) fail('accepted wrong total');
+    if (bad.length && E.tableAdd(G, bad[0].k, 'S', E.tableEntry(bad[0].k))) fail('accepted used-up pick');
+    if (k === 'koz' && E.tableAdd(G, k, null, e)) fail('accepted koz without trump');
+    if (!E.tableAdd(G, k, E.SUITS[rnd(4)], e)) { fail('refused a valid hand', k, JSON.stringify(e)); break; }
+  }
+  const V = E.tableView(G), sum = V.scores.reduce((a, b) => a + b, 0);
+  if (G.hands.length !== 20) fail('table hands', G.hands.length);
+  if (sum !== 0) fail('table not zero-sum', sum);
+  if (E.tableAdd(G, 'koz', 'S', { counts: [13, 0, 0, 0] })) fail('accepted a 21st hand');
+}
+
 // Translation keys: every language must define what English defines.
 const shape = (o, p = '') => Object.entries(o).flatMap(([k, v]) =>
   v && typeof v === 'object' && !Array.isArray(v) ? shape(v, p + k + '.') : [p + k]);
@@ -46,5 +70,5 @@ for (const [lang, t] of Object.entries(E.I18N)) {
     if (t[k].length !== E.I18N.en[k].length) fail(`${lang}.${k} has ${t[k].length} items`);
 }
 
-console.log(failures ? `${failures} failure(s)` : `ok: ${GAMES} games legal and zero-sum, translations complete (${Object.keys(E.I18N).join(', ')})`);
+console.log(failures ? `${failures} failure(s)` : `ok: ${GAMES} bot games legal and zero-sum, ${GAMES} score-mode tables zero-sum, translations complete (${Object.keys(E.I18N).join(', ')})`);
 process.exit(failures ? 1 : 0);
