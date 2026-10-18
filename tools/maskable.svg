@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="felt" cx="50%" cy="45%" r="75%">
+      <stop offset="0" stop-color="#74303a"/>
+      <stop offset=".55" stop-color="#521f25"/>
+      <stop offset="1" stop-color="#33121a"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#felt)"/>
+  <g transform="translate(256 262) scale(.72) translate(-256 -262)">
+    <g transform="rotate(-10 256 280)">
+      <rect x="150" y="120" width="212" height="296" rx="22" fill="#1d3a66" stroke="#f8f2e4" stroke-width="10"/>
+    </g>
+    <g transform="rotate(6 256 280)">
+      <rect x="160" y="108" width="212" height="296" rx="22" fill="#f8f2e4" stroke="#d6c8ad" stroke-width="3"/>
+      <path d="M196 312 L206 210 L240 248 L266 184 L292 248 L326 210 L336 312 Z" fill="#b1252c"/>
+      <rect x="196" y="320" width="140" height="20" rx="7" fill="#b1252c"/>
+      <circle cx="266" cy="284" r="11" fill="#c99a3b"/>
+      <circle cx="227" cy="290" r="7" fill="#c99a3b"/>
+      <circle cx="305" cy="290" r="7" fill="#c99a3b"/>
+      <circle cx="206" cy="204" r="9" fill="#b1252c"/>
+      <circle cx="266" cy="176" r="9" fill="#b1252c"/>
+      <circle cx="326" cy="204" r="9" fill="#b1252c"/>
+    </g>
+  </g>
+</svg>
