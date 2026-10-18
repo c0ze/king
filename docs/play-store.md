@@ -66,7 +66,7 @@ Arkadaşlarla gerçek kartlarla mı oynuyorsunuz? Kâğıt kalemi bırakın.
 • Seçen oyuncuya yalnızca hâlâ seçebileceği oyunlar gösterilir
 • Kim kaç el, kaç kupa, kaç kız aldıysa girin; toplam tutmadan kaydedilmez (13 el, 13 kupa, 8 erkek, 4 kız)
 • Yanlış girilen herhangi bir oyunu dokunarak düzeltin
-• Sonuçları WhatsApp’a tek dokunuşla paylaşın
+• Sonuçları tek dokunuşla arkadaşlarınızla paylaşın
 
 CEZALAR
 El Almaz (el başı −50), Kupa Almaz (kupa başı −30), Erkek Almaz (papaz ve vale başı −60), Kız Almaz (kız başı −100), Rıfkı (−320), Son İki (son iki el, el başı −180). Koz: el başı +50. Parti sonunda dört oyuncunun toplamı her zaman sıfırdır.
@@ -99,7 +99,7 @@ Playing with real cards? Put the pen and paper away.
 • The picker only sees the games they can still choose
 • Enter who took how many tricks, hearts or queens; a hand only saves when it adds up (13 tricks, 13 hearts, 8 kings and jacks, 4 queens)
 • Tap any hand to fix a mistake
-• Share the results to WhatsApp in one tap
+• Share the results with your friends in one tap
 
 THE GAMES
 El Almaz (−50 per trick), Kupa Almaz (−30 per heart), Erkek Almaz (−60 per king or jack), Kız Almaz (−100 per queen), Rıfkı (−320 for the king of hearts), Son İki (−180 for each of the last two tricks). Koz: +50 per trick. At the end, the four scores always add up to zero.
@@ -107,6 +107,14 @@ El Almaz (−50 per trick), Kupa Almaz (−30 per heart), Erkek Almaz (−60 per
 In English, Turkish and Japanese, on phones and tablets.
 
 King is made by Gand.
+
+## Submitted (18 October 2026)
+
+App id 4974614950163010974 in the Gand organization account. Version 1 (1.0.0) went to
+production review in 175 countries/regions, with the Turkish default listing and an en-US
+translation. Contact: contact@gand.tr, https://king.arda.tr. Rating contact: arda@gand.tr.
+The icon and feature graphic are labelled as AI-assisted; the screenshots are real captures.
+Managed publishing is off, so the app goes live as soon as review approves it.
 
 ## App content answers
 
