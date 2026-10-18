@@ -22,9 +22,10 @@ android/build.sh fingerprint
    Turkish, **Game**, **Free**.
 2. Keep **Play App Signing** on (Google-managed app signing key). Upload `build/king-1.0.0.aab`
    to **Internal testing** first.
-3. Under **Test and release → App integrity → App signing**, copy the **App signing key
-   certificate SHA-256** and add it to `public/.well-known/assetlinks.json` next to the upload
-   key that is already there. Push to `main`, which deploys it to
+3. Under **Protected with Play → App signing** (direct URL: `.../app/<id>/keymanagement`), use
+   **Copy all certificate fingerprints → SHA-256** and put every fingerprint in
+   `public/.well-known/assetlinks.json` next to the upload key. (Done for 1.0.0: the app is
+   created as id 4974614950163010974 and its three signing fingerprints are listed.) Push to `main`, which deploys it to
    https://king.arda.tr/.well-known/assetlinks.json.
    Without that fingerprint, the Play-installed app shows a browser address bar at the top.
 4. Install from the internal-testing link and check: no address bar, the splash screen, play
