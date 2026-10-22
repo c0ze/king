@@ -174,6 +174,8 @@ button{font:inherit;color:inherit}
 .cetvel table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.95rem}
 .cetvel th{font-weight:700;font-size:.9rem;padding:2px 3px;border-bottom:2px solid var(--pen);text-align:right;white-space:nowrap}
 .cetvel th:nth-child(-n+2),.cetvel td:nth-child(-n+2){text-align:left}
+/* player names wrap (at most two lines) so long or typed names never widen the sheet */
+.cetvel th .pn{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;white-space:normal;overflow-wrap:anywhere}
 .cetvel td{padding:1px 3px;text-align:right;white-space:nowrap;line-height:1.25}
 .cetvel td.n{color:#7d8db3;width:1.4em}
 .cetvel td.g{font-size:.88rem}
@@ -196,7 +198,12 @@ button{font:inherit;color:inherit}
 .ov.top .panel{pointer-events:auto}
 .panel{background:linear-gradient(180deg,#331e17,var(--panel));border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.55);width:100%;max-width:580px;max-height:100%;overflow:auto;padding:18px 20px 20px;box-sizing:border-box;animation:rise .25s cubic-bezier(.2,.8,.3,1)}
 @keyframes rise{from{transform:translateY(14px);opacity:0}}
-.ov.top .panel{max-height:62vh}
+/* stop just above your hand: the hand's cards start about --hw*1.6 from the bottom */
+.ov.top .panel{max-height:calc(100% - var(--hw)*1.6 - 20px)}
+/* fitPanel() adds these in turn while the panel still does not fit: the intro line, the descriptions,
+   then the glyph badges and "left" counts (so names get the full tile width), then the Turkish names under Japanese ones */
+.panel.fit1 .sub,.panel.fit2 .opt .en,.panel.fit3 .opt .gl,.panel.fit3 .opt:not(:disabled) .pt span,.panel.fit4 .opt .alt{display:none}
+.panel.fit3 .opt .tr{padding-right:0}
 .panel h2{font-family:var(--display);font-weight:700;font-size:1.5rem;margin:0;color:var(--amber);text-wrap:balance}
 .panel .sub{color:var(--muted);margin:4px 0 14px;font-size:.92rem;line-height:1.45}
 .panel p{line-height:1.5;margin:0 0 10px;max-width:62ch}
@@ -214,13 +221,15 @@ button{font:inherit;color:inherit}
 .opt.koz{grid-column:1/-1;background:linear-gradient(90deg,rgba(234,169,61,.14),var(--panel-2))}
 .suits{display:none;gap:8px;margin-top:10px}
 .suits.show{display:flex}
+.opt.koz:has(.suits.show) .en,.opt.koz:has(.suits.show) .pt{display:none}
 .suit{flex:1;font-size:1.7rem;padding:10px 0;border-radius:10px;background:var(--card);border:2px solid transparent;cursor:pointer;color:var(--suit-black);line-height:1;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 .suit.red{color:var(--suit-red)}
 .suit:hover{border-color:var(--amber)}
-.hres{display:grid;grid-template-columns:auto minmax(40px,1fr) auto auto;gap:10px 12px;align-items:center;margin:8px 0 16px;font-variant-numeric:tabular-nums}
+.hres{display:grid;grid-template-columns:minmax(0,auto) minmax(40px,1fr) auto auto;gap:10px 12px;align-items:center;margin:8px 0 16px;font-variant-numeric:tabular-nums}
 .hres .h{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:right}
 .hres .h:first-child{text-align:left}
-.hres .who{display:flex;align-items:center;gap:8px;font-weight:700;white-space:nowrap}
+.hres .who{display:flex;align-items:center;gap:8px;font-weight:700;white-space:nowrap;min-width:0}
+.hres .who .n{overflow:hidden;text-overflow:ellipsis}
 .hres .who .av{width:26px;height:26px;font-size:.8rem}
 .hres .barw{height:10px;border-radius:999px;background:rgba(243,233,218,.08);overflow:hidden}
 .hres .barw i{display:block;height:100%;border-radius:999px;background:var(--good);animation:grow .7s cubic-bezier(.2,.8,.3,1) backwards}
@@ -238,6 +247,7 @@ button{font:inherit;color:inherit}
 .rules table{border-collapse:collapse;margin:4px 0 8px;font-variant-numeric:tabular-nums}
 .rules td{padding:4px 12px 4px 0;border-bottom:1px solid var(--line);vertical-align:top}
 .rules td small{color:var(--muted);display:block}
+.menu .mh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:2px}
 .menu .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .menu .row>span{font-weight:700}
 .menu .mb{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
@@ -292,9 +302,9 @@ button{font:inherit;color:inherit}
 .sc-tot.pick{border-color:var(--amber)}
 .sc-tot .n{font-weight:700;font-size:.88rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sc-tot .v{font-variant-numeric:tabular-nums;font-weight:700}
-.names{display:grid;gap:8px}
-.nmrow{display:flex;align-items:center;gap:10px}
-.nmrow input{flex:1;min-width:0;font:inherit;font-size:1rem;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+.names{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.nmrow{display:flex;align-items:center;gap:8px}
+.nmrow input{flex:1;min-width:0;font:inherit;font-size:1rem;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
 .nmrow input:focus{outline:2px solid var(--amber);outline-offset:1px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chipb{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 12px 6px 6px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-size:.92rem;max-width:100%}
@@ -323,7 +333,9 @@ button{font:inherit;color:inherit}
 .hist .g{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hist .n{color:var(--muted)}
 .sc-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;align-items:center}
-.sc-actions .grow{flex:1}
+/* the start button shares the first-pick row when there is room, else drops below it on the right */
+#scFirst{flex:1 1 320px}
+.sc-actions [data-act=start]{margin-left:auto}
 .btn.big{padding:11px 18px;font-size:1rem}
 .btn:disabled{opacity:.4;cursor:default}
 .sc-done{align-items:center;text-align:center}
@@ -342,15 +354,22 @@ button{font:inherit;color:inherit}
 }
 @media (max-width:760px){
   .mark svg{display:none}
-  .scorer{margin:7px 2px;padding:14px 10px;border-radius:20px}
-  .sc-bar{bottom:-14px;margin:0 -10px -14px;padding:10px 10px calc(12px + env(safe-area-inset-bottom,0px))}
+  .scorer{margin:7px 2px;padding:12px 10px;border-radius:20px}
+  .sc-bar{bottom:-12px;margin:0 -10px -12px;padding:10px 10px calc(12px + env(safe-area-inset-bottom,0px))}
   .sc-bar .big{order:-1;flex-basis:100%}
   .sc-bar .btn:not(.big){font-size:.82rem;padding:6px 10px}
   .paper{padding:12px 8px 14px}
   .paper table{font-size:.92rem}
-  .sc-card{padding:14px 12px}
-  .cnt-row{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"who who pts" "step rest rest";row-gap:6px}
-  .cnt-row .restb{justify-self:start}
+  .sc-card{padding:12px;gap:8px}
+  .nmrow input{padding:9px 10px}
+  .cnt-row{grid-template-columns:minmax(0,1fr) auto 5ch;grid-template-areas:"who step pts" "rest step pts";row-gap:2px;padding:5px 0}
+  .cnt-row .restb{justify-self:start;margin-left:40px;padding:2px 9px;font-size:.75rem}
+  .sc-card .sub{font-size:.88rem;line-height:1.4}
+  .menu .row{padding:8px 0}
+  .menu .mb{margin-top:12px}
+  .gapp{padding:8px 10px;gap:10px}
+  .gapp .ln{flex-direction:column;align-items:stretch}
+  .gapp a{text-align:center}
   .hist{gap:3px 8px;font-size:.8rem}
   #langInline,#rulesBtn,.dots{display:none}
   .fan{display:none}
@@ -369,11 +388,42 @@ button{font:inherit;color:inherit}
   .panel{padding:16px 16px 18px}
   .ov.sheetish{align-items:end;padding-bottom:0}
   .ov.sheetish .panel{border-radius:18px 18px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
-  .opts{grid-template-columns:1fr 1fr}
-  .opt{padding:9px 10px}
-  .opt .tr{font-size:1rem;padding-right:36px}
-  .opt .gl{min-width:26px;height:26px;font-size:.75rem;top:8px;right:8px}
-  .opt .en{padding-right:0}
+  .ov.top .panel{padding:14px 12px}
+  .ov.top .panel h2{font-size:1.3rem}
+  .ov.top .panel .sub{font-size:.86rem;line-height:1.4;margin:2px 0 10px}
+  .opts{grid-template-columns:1fr 1fr;gap:6px}
+  .opt{padding:7px 9px}
+  .opt .tr{font-size:.95rem;padding-right:26px}
+  .opt .gl{min-width:24px;height:24px;padding:0 4px;font-size:.72rem;top:7px;right:7px}
+  .opt .en{padding-right:0;font-size:.78rem;line-height:1.3}
+  .opt .pt{margin-top:2px;font-size:.74rem}
+  .suits{margin-top:6px}
+  .suit{padding:7px 0;font-size:1.5rem}
+  /* the Japanese names already say what to avoid */
+  html[lang=ja] .opt:not([data-k=rifki]):not([data-k=soniki]) .en{display:none}
+}
+/* very narrow: small phones, or Chrome zoomed by a large system font size (a 375px phone at 125% is 300px) */
+@media (max-width:340px){
+  #app{padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px))}
+  .ov{padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px))}
+  .bar{gap:6px}
+  .mark{display:none}
+  .seg button,.seg.mode button{padding:6px 9px}
+  .btn{padding:6px 10px}
+  .btn.icon{padding:6px 9px}
+  .ov.top .panel h2{font-size:1.15rem}
+  .menu .row{padding:6px 0}
+  .gapp .tx span{display:none}
+  /* the player chips below carry the avatars, so the name inputs can use the whole width */
+  .nmrow .av{display:none}
+  .nmrow input{padding:9px 8px;font-size:.95rem}
+  .chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chipb{padding:5px 8px 5px 5px}
+  .scorer .sc-card .sub{font-size:.84rem}
+  .sc-card{gap:6px}
+  .paper table{font-size:.86rem}
+  .cetvel th,.cetvel td{padding-left:2px;padding-right:2px}
+  .cetvel td.g{white-space:normal}
 }
 @media (max-height:520px){
   #app{gap:4px;padding-block:4px}
@@ -383,6 +433,78 @@ button{font:inherit;color:inherit}
   .table{padding:4px 8px;margin:6px}
   .hand{padding-top:16px}
   .mark{font-size:1.2rem}
+  .ov{padding-top:calc(8px + env(safe-area-inset-top,0px));padding-bottom:calc(8px + env(safe-area-inset-bottom,0px))}
+  .panel{padding:12px 16px 14px}
+  .ov.top .panel,.panel.menu,.panel.sc-ed{max-width:760px}
+  .panel h2{font-size:1.2rem}
+  .panel .sub{margin:2px 0 8px;font-size:.84rem}
+  .opts{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .opt{padding:7px 9px}
+  .opt.koz{grid-column:span 2}
+  .opt .en{display:none}
+  .suits{margin-top:4px}
+  .suit{padding:5px 0;font-size:1.3rem}
+  .win-crown{width:48px;height:32px;margin-bottom:2px}
+  .hres{gap:6px 12px;margin:4px 0 10px}
+  .menu .mcols{display:grid;grid-template-columns:1fr 1fr;gap:0 24px;align-items:start}
+  .menu .row{padding:8px 0}
+  .menu .gand{margin-top:8px}
+  .cnts{display:grid;grid-template-columns:1fr 1fr;column-gap:18px}
+  .cnt-row{grid-template-columns:minmax(0,1fr) auto auto 5ch;grid-template-areas:"who step rest pts";padding:4px 0}
+  .cnt-row .restb{margin-left:0}
+  .stepper button{width:38px;height:38px}
+  .names{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .scorer{padding:8px 10px;margin:6px}
+  .sc-bar{bottom:-8px;margin:0 -10px -8px}
+  .sc-card{padding:10px 12px;gap:8px}
+  .sc-card h2{font-size:1.2rem}
+  .sc-card .sub{max-width:none;font-size:.82rem}
+  .chips{gap:5px}
+  .chipb{padding:4px 10px 4px 4px;font-size:.86rem}
+}
+/* very short: a phone in landscape with a large system font size (about 285px tall) */
+@media (max-height:320px){
+  .ov{padding-top:calc(4px + env(safe-area-inset-top,0px));padding-bottom:calc(4px + env(safe-area-inset-bottom,0px))}
+  .panel,.ov.top .panel{padding:8px 12px 10px;border-radius:14px}
+  .panel h2,.ov.top .panel h2{font-size:1.02rem}
+  .panel .sub,.ov.top .panel .sub{font-size:.76rem;line-height:1.35;margin:0 0 6px}
+  .opts{gap:5px}
+  .opt{padding:5px 8px}
+  .opt .tr{font-size:.86rem}
+  .opt .gl{min-width:20px;height:20px;padding:0 3px;top:5px;right:5px;font-size:.64rem}
+  .opt .alt{font-size:.66rem}
+  .opt .pt{margin-top:1px;font-size:.7rem}
+  .suits{margin-top:3px;gap:5px}
+  .suit{padding:2px 0;font-size:1.1rem}
+  .win-crown{display:none}
+  .hres{gap:3px 10px;margin:2px 0 6px}
+  .hres .who .av{width:22px;height:22px;font-size:.7rem}
+  .actions{margin-top:2px}
+  .btn.big{padding:7px 14px;font-size:.92rem}
+  .menu .row{padding:3px 0}
+  .menu .mb{margin-top:6px}
+  .menu .mb .btn{padding:6px}
+  .menu .gand{margin-top:0;gap:5px}
+  .gapp{padding:5px 8px}
+  .gapp .tx span{display:none}
+  .gapp .mono{width:30px;height:30px}
+  .menu .about{margin-top:6px;font-size:.74rem}
+  .scorer{padding:6px 8px}
+  .sc-bar{bottom:-6px;margin:0 -8px -6px}
+  .sc-card{padding:8px 10px;gap:4px}
+  .sc-card h3{font-size:.7rem}
+  /* the header's Sheet button already names this screen */
+  .sc-setup>h2{display:none}
+  .sc-card .sub,.scorer .sc-card .sub{font-size:.76rem;line-height:1.35}
+  .nmrow input{padding:6px 8px}
+  .chipb{padding:3px 9px 3px 3px}
+  .chipb .av{width:22px;height:22px}
+  .stepper button{width:32px;height:32px;font-size:1.15rem}
+  .stepper output{font-size:1.05rem}
+  .cnt-row{padding:2px 0}
+  .sc-game b{font-size:1.05rem}
+  .sc-game .gl{min-width:24px;height:24px}
+  .qgroup{gap:4px}
 }
 @media (prefers-reduced-motion:reduce){
   .slot,.hand .card,.sheet{transition:none}
@@ -1063,9 +1185,12 @@ function renderTrick(){
 }
 function layoutHand(){
   const hand=$('#hand'),cs=[...hand.children];if(!cs.length)return;
-  const hw=cs[0].offsetWidth,W=hand.clientWidth-8,n=cs.length;
+  const hw=cs[0].offsetWidth,n=cs.length;
+  const maxA=Math.min(13,n*1.05),depth=hw*.14,a=maxA*Math.PI/180;
+  // the end cards turn about a point below them, so their top corners swing out: keep those on the table
+  const over=n>1?hw*1.4*1.3*Math.sin(a)-hw/2*(1-Math.cos(a)):0;
+  const W=hand.clientWidth-8-2*over;
   const step=n>1?Math.min(hw*.64,(W-hw)/(n-1)):hw;
-  const maxA=Math.min(13,n*1.05),depth=hw*.14;
   cs.forEach((c,i)=>{
     const t=n>1?(i-(n-1)/2)/((n-1)/2):0;
     c.style.marginLeft=i?(step-hw)+'px':'0';
@@ -1171,7 +1296,7 @@ function sheetBody(v,edit){
   const tick=k=>{const u=v.penUsed[k];return `<span class="bx"><i>${u>0?'✕':''}</i><i>${u>1?'✕':''}</i></span>`};
   const kozUsed=v.quota.reduce((a,q)=>a+q.koz,0);
   const dots=(n,of)=>'●'.repeat(n)+'○'.repeat(of-n);
-  return `<table><thead><tr><th>#</th><th>${t.colGame}</th>${[0,1,2,3].map(p=>`<th>${esc(v.name(p))}</th>`).join('')}</tr></thead>
+  return `<table><thead><tr><th>#</th><th>${t.colGame}</th>${[0,1,2,3].map(p=>`<th><span class="pn">${esc(v.name(p))}</span></th>`).join('')}</tr></thead>
   <tbody>${rows.join('')}<tr class="tot"><td></td><td>${t.total}</td>${v.scores.map(x=>`<td class="${x<0?'neg':''}">${fmt(x)}</td>`).join('')}</tr></tbody></table>
   <h3>${t.penPlayed}</h3>
   <div class="ticks">${PEN.map(k=>`<span>${t.con[k].name}</span>${tick(k)}`).join('')}<span>${t.con.koz.name}</span><span class="pdots">${dots(kozUsed,8)}</span></div>
@@ -1240,6 +1365,14 @@ function renderOverlay(){
     else if(!same)(focusables(pn)[0]||pn).focus({preventScroll:true});
   }
   wireOverlay(kind);
+  fitPanel();
+}
+function fitPanel(){
+  const pn=$('#overlay .ov.top .panel')||$('#overlay .panel.sc-ed');if(!pn)return;
+  const fits=['fit1','fit2','fit3','fit4'];
+  pn.classList.remove(...fits);
+  // score mode keeps its "picks left" line: people at a real table need it more than the game descriptions
+  for(const c of pn.classList.contains('sc-ed')?fits.slice(1):fits)if(pn.scrollHeight>pn.clientHeight)pn.classList.add(c);
 }
 function openManual(k){clearTimeout(timer);toggleSheet(false);manualOv=k;ovKind=null;renderOverlay()}
 function closeManual(){manualOv=null;renderOverlay();step()}
@@ -1310,13 +1443,13 @@ function confirmHTML(){
 function menuHTML(){
   const t=T(),seg=(name,items,cur)=>`<div class="seg" role="group" aria-label="${name}">${items.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${v===cur}">${l}</button>`).join('')}</div>`;
   return `<div class="ov sheetish"><div class="panel menu" role="dialog" aria-label="${t.menu}">
-    <h2>${t.menu}</h2>
+    <div class="mh"><h2>${t.menu}</h2><button type="button" class="btn" id="closeBtn">${t.close}</button></div>
+    <div class="mcols"><div>
     <div class="row"><span>${t.language}</span><div class="seg" id="menuLang" role="group" aria-label="${t.language}">${langSeg()}</div></div>
     <div class="row"><span>${t.speed}</span><span id="menuSpeed">${seg(t.speed,[['n',t.normal],['f',t.fast]],fast?'f':'n')}</span></div>
     <div class="row"><span>${t.sound}</span><span id="menuSound">${seg(t.sound,[['1',t.on],['0',t.off]],soundOn?'1':'0')}</span></div>
     <div class="mb"><button type="button" class="btn" id="menuRules">${t.rules}</button>${mode==='score'?(G?`<button type="button" class="btn" id="menuNew">${t.sc.newTable}</button>`:''):`<button type="button" class="btn" id="menuNew">${t.newGame}</button>`}</div>
-    ${gandHTML()}
-    <div class="actions"><button type="button" class="btn primary" id="closeBtn">${t.close}</button></div></div></div>`;
+    </div><div>${gandHTML()}</div></div></div></div>`;
 }
 /* "Also from Gand": a menu entry only, never in the game flow (Play counts in-game promotion as ads) */
 const GAND_APPS=[
@@ -1336,7 +1469,7 @@ function wireOverlay(kind){
       if(k==='koz'){
         const s=e.target.closest('.suit');
         if(s){humanChoose('koz',s.dataset.s);return}
-        b.querySelector('.suits').classList.add('show');return;
+        b.querySelector('.suits').classList.add('show');fitPanel();return;
       }
       humanChoose(k);
     }));
@@ -1384,11 +1517,11 @@ function scTotals(V){
 const chipRow=(act,sel)=>`<div class="chips">${[0,1,2,3].map(p=>`<button type="button" class="chipb" data-act="${act}" data-p="${p}" aria-pressed="${sel===p}">${scAv(p)}<span class="n">${esc(scName(p))}</span></button>`).join('')}</div>`;
 function setupHTML(){
   const s=T().sc;
-  return `<div class="sc-card"><h2>${s.title}</h2><p class="sub">${s.setupSub}</p>
+  return `<div class="sc-card sc-setup"><h2>${s.title}</h2><p class="sub">${s.setupSub}</p>
     <h3>${s.seats}</h3>
     <div class="names">${[0,1,2,3].map(p=>`<label class="nmrow">${scAv(p)}<input id="scName${p}" data-p="${p}" maxlength="16" autocomplete="off" value="${esc(scDraft.names[p])}" placeholder="${esc(s.player(p+1))}"></label>`).join('')}</div>
-    <h3>${s.firstPick}</h3><div id="scFirst">${chipRow('first',scDraft.first)}</div>
-    <div class="sc-actions"><span class="grow"></span><button type="button" class="btn primary big" data-act="start">${s.start}</button></div></div>`;
+    <h3>${s.firstPick}</h3>
+    <div class="sc-actions"><div id="scFirst">${chipRow('first',scDraft.first)}</div><button type="button" class="btn primary big" data-act="start">${s.start}</button></div></div>`;
 }
 function pickBody(){
   const t=T(),s=t.sc,i=G.cur.i,p=tableChooser(G,i),q=tableTally(G,i).quota[p];
@@ -1401,9 +1534,9 @@ function entryBody(){
   let body='';
   if(NEED[k]){
     const need=NEED[k],sum=e.counts.reduce((a,b)=>a+b,0);
-    body=`<p class="need${sum===need?' ok':''}">${s.assigned(sum,need,s.unit[k])}</p>`+[0,1,2,3].map(p=>{const c=e.counts[p],v=c*PER[k];return `<div class="cnt-row"><div class="who2">${scAv(p)}<span class="n">${esc(scName(p))}</span></div>
+    body=`<p class="need${sum===need?' ok':''}">${s.assigned(sum,need,s.unit[k])}</p><div class="cnts">`+[0,1,2,3].map(p=>{const c=e.counts[p],v=c*PER[k];return `<div class="cnt-row"><div class="who2">${scAv(p)}<span class="n">${esc(scName(p))}</span></div>
       <div class="stepper"><button type="button" data-act="dec" data-p="${p}" ${c<=0?'disabled':''} aria-label="−1">−</button><output aria-live="polite">${c}</output><button type="button" data-act="inc" data-p="${p}" ${sum>=need?'disabled':''} aria-label="+1">+</button></div>
-      <button type="button" class="btn restb" data-act="rest" data-p="${p}" ${sum>=need?'disabled':''}>${s.rest}</button><span class="ptv ${v<0?'neg':v>0?'pos':''}">${fmt(v)}</span></div>`}).join('');
+      <button type="button" class="btn restb" data-act="rest" data-p="${p}" ${sum>=need?'disabled':''}>${s.rest}</button><span class="ptv ${v<0?'neg':v>0?'pos':''}">${fmt(v)}</span></div>`}).join('')+'</div>';
   }else if(k==='rifki')body=`<div class="qgroup"><p>${s.whoKH}</p>${chipRow('who',e.who)}</div>`;
   else body=`<div class="qgroup"><p>${s.t12}</p>${chipRow('t12',e.t12)}</div><div class="qgroup"><p>${s.t13}</p>${chipRow('t13',e.t13)}</div>`;
   return `<div class="sc-card"><div class="sc-head"><span class="hn">${i<G.hands.length?s.editHand(i+1):t.handOf(i+1)}</span><span class="spacer"></span><button type="button" class="btn" data-act="change">${s.changePick}</button></div>
@@ -1422,7 +1555,7 @@ function doneCard(V){
   const head=winners.length>1?t.tie(listJoin(winners.map(scName))):t.win(scName(winners[0]));
   return `<div class="sc-card sc-done">${crownSvg('win-crown')}<h2>${esc(head)}</h2><p class="sub">${s.doneSub(fmt(sum))}</p>
     <div class="hres"><span class="h">${t.thPlayer}</span><span></span><span class="h">${t.thTotal}</span><span class="h">${t.thPlace}</span>
-    ${order.map((p,i)=>{const v=V.scores[p];return `<span class="who">${scAv(p)}${esc(scName(p))}</span><span class="barw"><i class="${v<0?'neg':''}" style="width:${(Math.abs(v)/top*100).toFixed(1)}%"></i></span><span class="v ${v<0?'neg':v>0?'pos':''}">${fmt(v)}</span><span class="t">${place[i]}</span>`}).join('')}</div></div>`;
+    ${order.map((p,i)=>{const v=V.scores[p];return `<span class="who">${scAv(p)}<span class="n">${esc(scName(p))}</span></span><span class="barw"><i class="${v<0?'neg':''}" style="width:${(Math.abs(v)/top*100).toFixed(1)}%"></i></span><span class="v ${v<0?'neg':v>0?'pos':''}">${fmt(v)}</span><span class="t">${place[i]}</span>`}).join('')}</div></div>`;
 }
 function paperHTML(V){
   const s=T().sc;
@@ -1488,7 +1621,7 @@ function scClick(e){
   const opt=e.target.closest('.opt');
   if(opt&&!opt.disabled){
     const k=opt.dataset.k;
-    if(k==='koz'){const s=e.target.closest('.suit');if(s)scPick('koz',s.dataset.s);else opt.querySelector('.suits').classList.add('show');return}
+    if(k==='koz'){const s=e.target.closest('.suit');if(s)scPick('koz',s.dataset.s);else{opt.querySelector('.suits').classList.add('show');fitPanel()}return}
     scPick(k);return;
   }
   const b=e.target.closest('[data-act]');if(b&&!b.disabled)scAct(b.dataset.act,b);
@@ -1512,6 +1645,8 @@ function step(){
     const k=S.deal+':'+S.trickNo+':'+S.trick.length;
     if(k!==turnCue){turnCue=k;snd('turn')}
   }else if(S.phase==='trickEnd'){
+    // a menu or mode switch can cut collect() short: put the swept cards back before collecting again
+    document.querySelectorAll('#trick .slot.go').forEach(sl=>{sl.classList.remove('go');sl.style.transform=''});
     timer=setTimeout(collect,D(1150));
   }
 }
@@ -1577,7 +1712,7 @@ document.addEventListener('keydown',e=>{
   else if(!e.shiftKey&&(a===last||!pn.contains(a))){e.preventDefault();first.focus()}
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(sheetOpen)toggleSheet(false);else if(manualOv)closeManual();else if(mode==='score'&&G&&G.cur)scAct('cancel')}});
-window.addEventListener('resize',layoutHand);
+window.addEventListener('resize',()=>{layoutHand();fitPanel()});
 
 function boot(data){
   const d=data&&data.S;
@@ -1593,6 +1728,8 @@ function boot(data){
   try{if(localStorage.getItem(KEY+'-mode')==='score')mode='score'}catch(e){}
   if(data&&data.mode)mode=data.mode;
   render();step();
+  // web fonts change text heights: fit the pick panel again once they are in
+  try{document.fonts.ready.then(fitPanel)}catch(e){}
 }
 try{window.claude?.hot?.snapshot?.(()=>({S,G,mode}))}catch(e){}
 window.claude?.hot?.ready?window.claude.hot.ready(boot):boot(window.claude?.hot?.data??{});
